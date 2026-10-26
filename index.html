@@ -3,14 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel Doomsday İzleme Takibi</title>
+    <title>Marvel & Süper Kahraman Kronolojik İzleme Takibi</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -18,606 +13,640 @@
                 extend: {
                     colors: {
                         marvel: {
-                            red: '#e23636',
-                            darkRed: '#990000',
-                            gold: '#f39c12',
-                            darkBg: '#0f0f12',
-                            cardBg: '#18181c',
-                            cardHover: '#222228',
-                            border: '#2a2a32'
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            900: '#7f1d1d',
+                            950: '#450a0a',
+                        },
+                        darkbase: {
+                            900: '#0b0f19',
+                            800: '#111827',
+                            700: '#1f2937',
+                            600: '#374151'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom Custom Scrollbar & Animations */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #0f0f12;
+            background: #111827;
         }
         ::-webkit-scrollbar-thumb {
-            background: #2a2a32;
+            background: #374151;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #e23636;
-        }
-        .glow-red {
-            box-shadow: 0 0 15px rgba(226, 54, 54, 0.35);
-        }
-        .glass-panel {
-            background: rgba(24, 24, 28, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: #4b5563;
         }
     </style>
 </head>
-<body class="bg-marvel-darkBg text-gray-200 font-sans min-h-screen pb-12 antialiased selection:bg-marvel-red selection:text-white">
+<body class="min-h-screen flex flex-col justify-between selection:bg-marvel-600 selection:text-white">
 
-    <!-- Header Banner -->
-    <header class="relative bg-gradient-to-b from-marvel-darkRed/40 via-marvel-darkBg/80 to-marvel-darkBg border-b border-marvel-border pt-8 pb-6 px-4">
-        <div class="max-w-4xl mx-auto text-center space-y-3">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-marvel-red/20 border border-marvel-red/40 text-marvel-red text-xs font-semibold uppercase tracking-wider">
-                <i class="fa-solid fa-film"></i> MCU & Multiverse İzleme Rehberi
+    <!-- Header / Banner -->
+    <header class="bg-gradient-to-r from-darkbase-900 via-marvel-950 to-darkbase-900 border-b border-marvel-900/40 shadow-2xl sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-marvel-600 text-white p-3 rounded-xl shadow-lg shadow-marvel-600/30 flex items-center justify-center">
+                    <i class="fa-solid fa-clapperboard text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        Marvel <span class="text-marvel-500">Chronicle</span>
+                    </h1>
+                    <p class="text-xs sm:text-sm text-gray-400">Süper Kahraman Kronolojik İzleme ve Süre Takip Asistanı</p>
+                </div>
             </div>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 via-amber-400 to-red-600 tracking-tight">
-                MARVEL DOOMSDAY TAKİP
-            </h1>
-            <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
-                Avengers: Doomsday'e giden yoldaki tüm yapımları ve <strong>tek tek tüm bölümlerini</strong> takip edin, kalan sürenizi anlık hesaplayın.
-            </p>
+            
+            <!-- Quick Action Buttons -->
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="markAllWatched()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-check-double"></i> Tümünü İzle
+                </button>
+                <button onclick="resetProgress()" class="bg-marvel-700 hover:bg-marvel-800 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow-md transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-rotate-right"></i> Sıfırla
+                </button>
+                <button onclick="exportData()" class="bg-darkbase-700 hover:bg-darkbase-600 text-gray-200 px-3.5 py-2 rounded-lg text-xs font-semibold border border-gray-700 transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-download"></i> Dışa Aktar
+                </button>
+                <label class="bg-darkbase-700 hover:bg-darkbase-600 text-gray-200 px-3.5 py-2 rounded-lg text-xs font-semibold border border-gray-700 transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-upload"></i> İçe Aktar
+                    <input type="file" id="importFile" onchange="importData(event)" class="hidden" accept=".json">
+                </label>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto px-4 mt-4 space-y-6">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 w-full flex-grow">
 
-        <!-- Sticky Stats Box -->
-        <div class="sticky top-4 z-40 glass-panel border border-marvel-border rounded-2xl p-4 sm:p-5 shadow-2xl glow-red">
-            <!-- Progress Bar -->
-            <div class="mb-4">
-                <div class="flex justify-between text-xs sm:text-sm font-medium mb-1.5">
-                    <span class="text-gray-300 flex items-center gap-1.5">
-                        <i class="fa-solid fa-chart-line text-marvel-gold"></i> Genel Tamamlanma
-                    </span>
-                    <span id="progress-percent" class="text-marvel-gold font-bold">0%</span>
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Total Duration -->
+            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Toplam Süre</p>
+                    <h3 id="statTotalTime" class="text-2xl font-bold text-white mt-1">0s 0dk</h3>
+                    <p class="text-xs text-gray-500 mt-1">125 Yapım / Tüm Bölümler</p>
                 </div>
-                <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden p-0.5 border border-gray-700/50">
-                    <div id="progress-bar" class="bg-gradient-to-r from-marvel-red to-amber-500 h-full rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                <div class="bg-blue-500/10 text-blue-400 p-3.5 rounded-xl border border-blue-500/20">
+                    <i class="fa-solid fa-clock text-xl"></i>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                <div class="bg-marvel-cardBg/90 border border-marvel-border/80 rounded-xl p-3">
-                    <span class="text-gray-400 text-xs block mb-1">Kalan Süre</span>
-                    <span id="stat-remaining-time" class="text-lg sm:text-xl font-bold text-marvel-red">0s 0dk</span>
+            <!-- Watched Duration -->
+            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">İzlenen Süre</p>
+                    <h3 id="statWatchedTime" class="text-2xl font-bold text-emerald-400 mt-1">0s 0dk</h3>
+                    <p class="text-xs text-gray-500 mt-1" id="statWatchedEpisodes">0 / 0 Bölüm/Film</p>
                 </div>
-                <div class="bg-marvel-cardBg/90 border border-marvel-border/80 rounded-xl p-3">
-                    <span class="text-gray-400 text-xs block mb-1">İzlenen Süre</span>
-                    <span id="stat-watched-time" class="text-lg sm:text-xl font-bold text-emerald-400">0s 0dk</span>
-                </div>
-                <div class="bg-marvel-cardBg/90 border border-marvel-border/80 rounded-xl p-3">
-                    <span class="text-gray-400 text-xs block mb-1">Kalan Yapım</span>
-                    <span id="stat-remaining-count" class="text-lg sm:text-xl font-bold text-amber-400">0 / 0</span>
-                </div>
-                <div class="bg-marvel-cardBg/90 border border-marvel-border/80 rounded-xl p-3">
-                    <span class="text-gray-400 text-xs block mb-1">Kalan Bölüm</span>
-                    <span id="stat-remaining-episodes" class="text-lg sm:text-xl font-bold text-sky-400">0 Bölüm</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Controls (Search & Filters) -->
-        <div class="bg-marvel-cardBg border border-marvel-border rounded-2xl p-4 space-y-4">
-            <!-- Search & Quick Action Row -->
-            <div class="flex flex-col sm:flex-row gap-3">
-                <div class="relative flex-1">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
-                    <input type="text" id="search-input" placeholder="Yapım veya dizi adı ara..." 
-                        class="w-full bg-marvel-darkBg border border-marvel-border rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-marvel-red transition-colors text-gray-200 placeholder-gray-500">
-                </div>
-                <div class="flex items-center gap-2">
-                    <button id="btn-mark-all" class="flex-1 sm:flex-none px-3.5 py-2.5 bg-gray-800 hover:bg-emerald-950/60 hover:text-emerald-400 border border-marvel-border hover:border-emerald-600/50 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-check-double"></i> Tümünü Tamamla
-                    </button>
-                    <button id="btn-reset-all" class="flex-1 sm:flex-none px-3.5 py-2.5 bg-gray-800 hover:bg-marvel-red/20 hover:text-marvel-red border border-marvel-border hover:border-marvel-red/50 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-rotate-left"></i> Sıfırla
-                    </button>
+                <div class="bg-emerald-500/10 text-emerald-400 p-3.5 rounded-xl border border-emerald-500/20">
+                    <i class="fa-solid fa-circle-check text-xl"></i>
                 </div>
             </div>
 
-            <!-- Filter Tabs -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-marvel-border/60">
-                <!-- Status Filter -->
-                <div class="flex items-center bg-marvel-darkBg p-1 rounded-xl border border-marvel-border text-xs">
-                    <button class="filter-status-btn px-3 py-1.5 rounded-lg font-medium transition-all active-tab" data-status="all">Tümü</button>
-                    <button class="filter-status-btn px-3 py-1.5 rounded-lg font-medium transition-all text-gray-400" data-status="remaining">Kalanlar</button>
-                    <button class="filter-status-btn px-3 py-1.5 rounded-lg font-medium transition-all text-gray-400" data-status="completed">Tamamlananlar</button>
+            <!-- Remaining Duration -->
+            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Kalan Süre</p>
+                    <h3 id="statRemainingTime" class="text-2xl font-bold text-amber-400 mt-1">0s 0dk</h3>
+                    <p class="text-xs text-gray-500 mt-1">İzlenmesi Gereken</p>
                 </div>
+                <div class="bg-amber-500/10 text-amber-400 p-3.5 rounded-xl border border-amber-500/20">
+                    <i class="fa-solid fa-hourglass-half text-xl"></i>
+                </div>
+            </div>
 
-                <!-- Type Filter -->
-                <div class="flex items-center bg-marvel-darkBg p-1 rounded-xl border border-marvel-border text-xs">
-                    <button class="filter-type-btn px-3 py-1.5 rounded-lg font-medium transition-all active-tab" data-type="all">Hepsi</button>
-                    <button class="filter-type-btn px-3 py-1.5 rounded-lg font-medium transition-all text-gray-400" data-type="Film">Filmler</button>
-                    <button class="filter-type-btn px-3 py-1.5 rounded-lg font-medium transition-all text-gray-400" data-type="Dizi">Diziler</button>
-                    <button class="filter-type-btn px-3 py-1.5 rounded-lg font-medium transition-all text-gray-400" data-type="Özel Bölüm">Özel</button>
+            <!-- Completion Percentage -->
+            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Tamamlanma</p>
+                        <h3 id="statPercentage" class="text-2xl font-bold text-marvel-500 mt-1">%0.0</h3>
+                    </div>
+                    <div class="bg-marvel-500/10 text-marvel-400 p-3.5 rounded-xl border border-marvel-500/20">
+                        <i class="fa-solid fa-chart-pie text-xl"></i>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-700/50 rounded-full h-2.5 mt-3 overflow-hidden">
+                    <div id="statProgressBar" class="bg-gradient-to-r from-marvel-600 to-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- List Container -->
-        <div id="item-list-container" class="space-y-3">
-            <!-- Dynamic Cards Inserted Here -->
+        <!-- Filters & Search Bar -->
+        <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-4 mb-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Search input -->
+            <div class="relative w-full md:w-80">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="searchInput" oninput="filterItems()" placeholder="Film veya dizi ara..." class="w-full bg-darkbase-900 border border-gray-700 text-gray-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-marvel-500 transition">
+            </div>
+
+            <!-- Category / Status Filters -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
+                <button onclick="setFilter('all')" id="filter-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-marvel-600 text-white shadow-md transition cursor-pointer">Tümü</button>
+                <button onclick="setFilter('movie')" id="filter-movie" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">Filmler & Kısalar</button>
+                <button onclick="setFilter('series')" id="filter-series" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">Diziler</button>
+                <button onclick="setFilter('watched')" id="filter-watched" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">İzlenenler</button>
+                <button onclick="setFilter('unwatched')" id="filter-unwatched" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">İzlenmeyenler</button>
+            </div>
         </div>
 
-        <!-- Empty State -->
-        <div id="empty-state" class="hidden text-center py-12 border border-dashed border-marvel-border rounded-2xl bg-marvel-cardBg/40">
-            <i class="fa-solid fa-film text-4xl text-gray-600 mb-3"></i>
-            <p class="text-gray-400 font-medium text-base">Aradığınız kriterlere uygun yapım bulunamadı.</p>
-            <p class="text-gray-600 text-xs mt-1">Filtreleri veya arama terimini değiştirmeyi deneyin.</p>
+        <!-- Chronological List Container -->
+        <div id="itemsContainer" class="space-y-3">
+            <!-- Dynamically populated -->
         </div>
 
     </main>
 
-    <!-- Notification Toast Modal -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div id="toast-content" class="flex items-center gap-3 bg-gray-900 border border-marvel-border text-gray-100 px-4 py-3 rounded-xl shadow-2xl text-sm font-medium">
-            <i id="toast-icon" class="fa-solid fa-circle-info text-marvel-gold text-lg"></i>
-            <span id="toast-msg">İşlem gerçekleştirildi.</span>
-        </div>
+    <!-- Custom Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-darkbase-800 border border-gray-700 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">İşlem başarılı</span>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-darkbase-900 border-t border-gray-800 py-6 mt-12 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>Marvel & Superhero Chronological Watch Tracker &copy; 2026</p>
+            <p class="text-gray-400">Tüm bölümler ve süreler kronolojik sıraya göre hesaplanmıştır.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
     <script>
-        // Marvel Chronological Watch Data with Detailed Episode Breakdown
-        const rawData = [
-            { id: "daredevil-s2", name: "Daredevil (2. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.0 },
-            { id: "luke-cage-s1", name: "Luke Cage (1. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 12.0 },
-            { id: "iron-fist-s1", name: "Iron Fist (1. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.5 },
-            { id: "defenders", name: "The Defenders (Minidizi)", category: "Dizi", episodeCount: 8, totalHours: 6.5 },
-            { id: "punisher-s1", name: "The Punisher (1. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.5 },
-            { id: "jessica-jones-s2", name: "Jessica Jones (2. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.5 },
-            { id: "luke-cage-s2", name: "Luke Cage (2. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 12.0 },
-            { id: "iron-fist-s2", name: "Iron Fist (2. Sezon)", category: "Dizi", episodeCount: 10, totalHours: 8.5 },
-            { id: "daredevil-s3", name: "Daredevil (3. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.0 },
-            { id: "punisher-s2", name: "The Punisher (2. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.5 },
-            { id: "jessica-jones-s3", name: "Jessica Jones (3. Sezon)", category: "Dizi", episodeCount: 13, totalHours: 11.5 },
-            { id: "cloak-dagger", name: "Cloak & Dagger (1-2. Sezon)", category: "Dizi", episodeCount: 20, totalHours: 14.0 },
-            { id: "runaways", name: "Runaways (1-3. Sezonlar)", category: "Dizi", episodeCount: 33, totalHours: 24.5 },
-            { id: "venom-1", name: "Venom (2018)", category: "Film", episodeCount: 1, totalHours: 1.9 },
-            { id: "new-mutants", name: "The New Mutants (2020)", category: "Film", episodeCount: 1, totalHours: 1.6 },
-            { id: "what-if-s1", name: "What If...? (1. Sezon)", category: "Dizi", episodeCount: 9, totalHours: 4.5 },
-            { id: "venom-2", name: "Venom: Let There Be Carnage", category: "Film", episodeCount: 1, totalHours: 1.6 },
-            { id: "morbius", name: "Morbius (2022)", category: "Film", episodeCount: 1, totalHours: 1.7 },
-            { id: "dr-strange-2", name: "Doctor Strange 2", category: "Film", episodeCount: 1, totalHours: 2.1 },
-            { id: "hawkeye", name: "Hawkeye", category: "Dizi", episodeCount: 6, totalHours: 4.5 },
-            { id: "moon-knight", name: "Moon Knight", category: "Dizi", episodeCount: 6, totalHours: 4.5 },
-            { id: "she-hulk", name: "She-Hulk: Attorney at Law", category: "Dizi", episodeCount: 9, totalHours: 4.5 },
-            { id: "ms-marvel", name: "Ms. Marvel", category: "Dizi", episodeCount: 6, totalHours: 4.5 },
-            { id: "thor-4", name: "Thor: Love and Thunder", category: "Film", episodeCount: 1, totalHours: 2.0 },
-            { id: "werewolf-by-night", name: "Werewolf by Night", category: "Özel Bölüm", episodeCount: 1, totalHours: 0.9 },
-            { id: "gotg-holiday", name: "GotG Holiday Special", category: "Özel Bölüm", episodeCount: 1, totalHours: 0.7 },
-            { id: "wakanda-forever", name: "Black Panther: Wakanda Forever", category: "Film", episodeCount: 1, totalHours: 2.7 },
-            { id: "antman-3", name: "Ant-Man and the Wasp: Quantumania", category: "Film", episodeCount: 1, totalHours: 2.1 },
-            { id: "gotg-3", name: "Guardians of the Galaxy Vol. 3", category: "Film", episodeCount: 1, totalHours: 2.5 },
-            { id: "groot-s2", name: "I Am Groot (2. Sezon)", category: "Dizi", episodeCount: 5, totalHours: 0.3 },
-            { id: "secret-invasion", name: "Secret Invasion", category: "Dizi", episodeCount: 6, totalHours: 4.2 },
-            { id: "the-marvels", name: "The Marvels", category: "Film", episodeCount: 1, totalHours: 1.8 },
-            { id: "what-if-s2-3", name: "What If...? (2. ve 3. Sezon)", category: "Dizi", episodeCount: 18, totalHours: 9.5 },
-            { id: "x-men-97", name: "X-Men '97", category: "Dizi", episodeCount: 10, totalHours: 5.0 },
-            { id: "madame-web", name: "Madame Web (2024)", category: "Film", episodeCount: 1, totalHours: 1.9 },
-            { id: "venom-3", name: "Venom: The Last Dance (2024)", category: "Film", episodeCount: 1, totalHours: 1.8 },
-            { id: "echo", name: "Echo", category: "Dizi", episodeCount: 5, totalHours: 3.5 },
-            { id: "deadpool-wolverine", name: "Deadpool & Wolverine", category: "Film", episodeCount: 1, totalHours: 2.1 },
-            { id: "agatha", name: "Agatha All Along", category: "Dizi", episodeCount: 9, totalHours: 6.0 },
-            { id: "eyes-of-wakanda", name: "Eyes of Wakanda", category: "Dizi", episodeCount: 4, totalHours: 2.5 },
-            { id: "spider-man-freshman", name: "Your Friendly Neighborhood Spider-Man", category: "Dizi", episodeCount: 10, totalHours: 5.0 },
-            { id: "daredevil-born-again", name: "Daredevil: Born Again", category: "Dizi", episodeCount: 9, totalHours: 7.5 },
-            { id: "ironheart", name: "Ironheart", category: "Dizi", episodeCount: 6, totalHours: 4.5 },
-            { id: "cap-4", name: "Captain America: Brave New World", category: "Film", episodeCount: 1, totalHours: 2.0 },
-            { id: "thunderbolts", name: "Thunderbolts*", category: "Film", episodeCount: 1, totalHours: 2.2 },
-            { id: "fantastic-four", name: "The Fantastic Four: First Steps", category: "Film", episodeCount: 1, totalHours: 2.1 },
-            { id: "spiderman-4", name: "Spider-Man: Brand New Day", category: "Film", episodeCount: 1, totalHours: 2.4 },
-            { id: "avengers-doomsday", name: "Avengers: Doomsday", category: "Film", episodeCount: 1, totalHours: 2.5 }
+        // Full Dataset of 125 Items provided by user
+        const itemsData = [
+            { id: 1, title: "Captain America: The First Avenger", year: "1942–1945", type: "movie", duration: 124 },
+            { id: 2, title: "Marvel One-Shot: Agent Carter", year: "1944", type: "movie", duration: 15 },
+            { id: 3, title: "Agent Carter (1. Sezon)", year: "1946", type: "series", eps: 8, epDuration: 42 },
+            { id: 4, title: "Agent Carter (2. Sezon)", year: "1947", type: "series", eps: 10, epDuration: 42 },
+            { id: 5, title: "X-Men: First Class", year: "1962", type: "movie", duration: 132 },
+            { id: 6, title: "X-Men Origins: Wolverine", year: "1979", type: "movie", duration: 107 },
+            { id: 7, title: "X-Men: Apocalypse", year: "1983", type: "movie", duration: 144 },
+            { id: 8, title: "X-Men: Dark Phoenix", year: "1992", type: "movie", duration: 113 },
+            { id: 9, title: "Captain Marvel", year: "1995", type: "movie", duration: 124 },
+            { id: 10, title: "Blade", year: "1998", type: "movie", duration: 120 },
+            { id: 11, title: "X-Men", year: "2000", type: "movie", duration: 104 },
+            { id: 12, title: "Blade II", year: "2002", type: "movie", duration: 117 },
+            { id: 13, title: "Spider-Man", year: "2002", type: "movie", duration: 121 },
+            { id: 14, title: "Daredevil", year: "2003", type: "movie", duration: 103 },
+            { id: 15, title: "X2: X-Men United", year: "2003", type: "movie", duration: 134 },
+            { id: 16, title: "Blade: Trinity", year: "2004", type: "movie", duration: 113 },
+            { id: 17, title: "The Punisher", year: "2004", type: "movie", duration: 124 },
+            { id: 18, title: "Spider-Man 2", year: "2004", type: "movie", duration: 127 },
+            { id: 19, title: "Elektra", year: "2005", type: "movie", duration: 97 },
+            { id: 20, title: "Fantastic Four", year: "2005", type: "movie", duration: 106 },
+            { id: 21, title: "X-Men: The Last Stand", year: "2006", type: "movie", duration: 104 },
+            { id: 22, title: "Spider-Man 3", year: "2007", type: "movie", duration: 139 },
+            { id: 23, title: "Fantastic Four: Rise of the Silver Surfer", year: "2007", type: "movie", duration: 92 },
+            { id: 24, title: "Iron Man", year: "2008", type: "movie", duration: 126 },
+            { id: 25, title: "Punisher: War Zone", year: "2008", type: "movie", duration: 103 },
+            { id: 26, title: "The Incredible Hulk", year: "2008", type: "movie", duration: 112 },
+            { id: 27, title: "Iron Man 2", year: "2010", type: "movie", duration: 124 },
+            { id: 28, title: "Marvel One-Shot: The Consultant", year: "2011", type: "movie", duration: 4 },
+            { id: 29, title: "Marvel One-Shot: A Funny Thing Happened on the Way to Thor's Hammer", year: "2011", type: "movie", duration: 4 },
+            { id: 30, title: "Thor", year: "2011", type: "movie", duration: 115 },
+            { id: 31, title: "Marvel One-Shot: Item 47", year: "2012", type: "movie", duration: 12 },
+            { id: 32, title: "The Amazing Spider-Man", year: "2012", type: "movie", duration: 136 },
+            { id: 33, title: "The Avengers", year: "2012", type: "movie", duration: 143 },
+            { id: 34, title: "Iron Man 3", year: "2013", type: "movie", duration: 130 },
+            { id: 35, title: "Marvel One-Shot: All Hail the King", year: "2013", type: "movie", duration: 14 },
+            { id: 36, title: "The Wolverine", year: "2013", type: "movie", duration: 126 },
+            { id: 37, title: "Thor: The Dark World", year: "2013", type: "movie", duration: 112 },
+            { id: 38, title: "Agents of S.H.I.E.L.D. (1. Sezon 1-7. Bölümler)", year: "2013", type: "series", eps: 7, epDuration: 43 },
+            { id: 39, title: "Captain America: The Winter Soldier", year: "2014", type: "movie", duration: 136 },
+            { id: 40, title: "Agents of S.H.I.E.L.D. (1. Sezon 8-22. Bölümler)", year: "2014", type: "series", eps: 15, epDuration: 43 },
+            { id: 41, title: "The Amazing Spider-Man 2", year: "2014", type: "movie", duration: 142 },
+            { id: 42, title: "X-Men: Days of Future Past", year: "2014", type: "movie", duration: 131 },
+            { id: 43, title: "Guardians of the Galaxy", year: "2014", type: "movie", duration: 121 },
+            { id: 44, title: "Guardians of the Galaxy Vol. 2", year: "2014", type: "movie", duration: 136 },
+            { id: 45, title: "I Am Groot (1. Sezon)", year: "2014", type: "series", eps: 5, epDuration: 4 },
+            { id: 46, title: "Fant4stic", year: "2015", type: "movie", duration: 100 },
+            { id: 47, title: "Daredevil (1. Sezon)", year: "2015", type: "series", eps: 13, epDuration: 54 },
+            { id: 48, title: "Jessica Jones (1. Sezon)", year: "2015", type: "series", eps: 13, epDuration: 52 },
+            { id: 49, title: "Agents of S.H.I.E.L.D. (2. Sezon)", year: "2014–2015", type: "series", eps: 22, epDuration: 43 },
+            { id: 50, title: "Avengers: Age of Ultron", year: "2015", type: "movie", duration: 141 },
+            { id: 51, title: "Ant-Man", year: "2015", type: "movie", duration: 117 },
+            { id: 52, title: "Daredevil (2. Sezon)", year: "2016", type: "series", eps: 13, epDuration: 54 },
+            { id: 53, title: "Luke Cage (1. Sezon)", year: "2016", type: "series", eps: 13, epDuration: 55 },
+            { id: 54, title: "Deadpool", year: "2016", type: "movie", duration: 108 },
+            { id: 55, title: "Captain America: Civil War", year: "2016", type: "movie", duration: 147 },
+            { id: 56, title: "Black Widow", year: "2016", type: "movie", duration: 134 },
+            { id: 57, title: "Black Panther", year: "2016", type: "movie", duration: 134 },
+            { id: 58, title: "Iron Fist (1. Sezon)", year: "2017", type: "series", eps: 13, epDuration: 55 },
+            { id: 59, title: "The Defenders", year: "2017", type: "series", eps: 8, epDuration: 50 },
+            { id: 60, title: "Spider-Man: Homecoming", year: "2016", type: "movie", duration: 133 },
+            { id: 61, title: "The Punisher (1. Sezon)", year: "2017", type: "series", eps: 13, epDuration: 53 },
+            { id: 62, title: "Doctor Strange", year: "2016–2017", type: "movie", duration: 115 },
+            { id: 63, title: "Agents of S.H.I.E.L.D. (3. ve 4. Sezonlar)", year: "2015–2017", type: "series", eps: 44, epDuration: 43 },
+            { id: 64, title: "Jessica Jones (2. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 52 },
+            { id: 65, title: "Luke Cage (2. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 55 },
+            { id: 66, title: "Iron Fist (2. Sezon)", year: "2018", type: "series", eps: 10, epDuration: 50 },
+            { id: 67, title: "Daredevil (3. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 50 },
+            { id: 68, title: "The Punisher (2. Sezon)", year: "2019", type: "series", eps: 13, epDuration: 50 },
+            { id: 69, title: "Jessica Jones (3. Sezon)", year: "2019", type: "series", eps: 13, epDuration: 52 },
+            { id: 70, title: "Cloak & Dagger (1. ve 2. Sezon)", year: "2018–2019", type: "series", eps: 20, epDuration: 45 },
+            { id: 71, title: "Runaways (1-3. Sezonlar)", year: "2017–2019", type: "series", eps: 33, epDuration: 45 },
+            { id: 72, title: "Inhumans (1. Sezon)", year: "2017", type: "series", eps: 8, epDuration: 43 },
+            { id: 73, title: "Helstrom (1. Sezon)", year: "2020", type: "series", eps: 10, epDuration: 50 },
+            { id: 74, title: "Thor: Ragnarok", year: "2017", type: "movie", duration: 130 },
+            { id: 75, title: "Ant-Man and the Wasp", year: "2018", type: "movie", duration: 118 },
+            { id: 76, title: "Avengers: Infinity War", year: "2018", type: "movie", duration: 149 },
+            { id: 77, title: "Venom", year: "2018", type: "movie", duration: 112 },
+            { id: 78, title: "Deadpool 2", year: "2018", type: "movie", duration: 119 },
+            { id: 79, title: "Avengers: Endgame", year: "2018–2023", type: "movie", duration: 181 },
+            { id: 80, title: "Agents of S.H.I.E.L.D. (5-7. Sezonlar)", year: "2017–2020", type: "series", eps: 48, epDuration: 43 },
+            { id: 81, title: "The New Mutants", year: "2020", type: "movie", duration: 94 },
+            { id: 82, title: "WandaVision", year: "2023", type: "series", eps: 9, epDuration: 35 },
+            { id: 83, title: "Loki (1. Sezon)", year: "2023", type: "series", eps: 6, epDuration: 50 },
+            { id: 84, title: "What If...? (1. Sezon)", year: "2023", type: "series", eps: 9, epDuration: 32 },
+            { id: 85, title: "Shang-Chi and the Legend of the Ten Rings", year: "2024", type: "movie", duration: 132 },
+            { id: 86, title: "The Falcon and the Winter Soldier", year: "2024", type: "series", eps: 6, epDuration: 50 },
+            { id: 87, title: "Eternals", year: "2024", type: "movie", duration: 156 },
+            { id: 88, title: "Spider-Man: Far From Home", year: "2024", type: "movie", duration: 129 },
+            { id: 89, title: "Venom: Let There Be Carnage", year: "2021", type: "movie", duration: 97 },
+            { id: 90, title: "Morbius", year: "2022", type: "movie", duration: 104 },
+            { id: 91, title: "Spider-Man: No Way Home", year: "2024", type: "movie", duration: 148 },
+            { id: 92, title: "Doctor Strange in the Multiverse of Madness", year: "2024", type: "movie", duration: 126 },
+            { id: 93, title: "Hawkeye", year: "2024", type: "series", eps: 6, epDuration: 45 },
+            { id: 94, title: "Moon Knight", year: "2025", type: "series", eps: 6, epDuration: 50 },
+            { id: 95, title: "She-Hulk: Attorney at Law", year: "2025", type: "series", eps: 9, epDuration: 30 },
+            { id: 96, title: "Ms. Marvel", year: "2025", type: "series", eps: 6, epDuration: 50 },
+            { id: 97, title: "Thor: Love and Thunder", year: "2025", type: "movie", duration: 118 },
+            { id: 98, title: "Werewolf by Night", year: "2025", type: "movie", duration: 53 },
+            { id: 99, title: "The Guardians of the Galaxy Holiday Special", year: "2025", type: "movie", duration: 44 },
+            { id: 100, title: "Black Panther: Wakanda Forever", year: "2025", type: "movie", duration: 161 },
+            { id: 101, title: "Ant-Man and the Wasp: Quantumania", year: "2026", type: "movie", duration: 124 },
+            { id: 102, title: "Guardians of the Galaxy Vol. 3", year: "2026", type: "movie", duration: 150 },
+            { id: 103, title: "I Am Groot (2. Sezon)", year: "2026", type: "series", eps: 5, epDuration: 4 },
+            { id: 104, title: "Secret Invasion", year: "2026", type: "series", eps: 6, epDuration: 50 },
+            { id: 105, title: "Loki (2. Sezon)", year: "2026", type: "series", eps: 6, epDuration: 50 },
+            { id: 106, title: "The Marvels", year: "2026", type: "movie", duration: 105 },
+            { id: 107, title: "What If...? (2. ve 3. Sezon)", year: "2023–2024", type: "series", eps: 17, epDuration: 32 },
+            { id: 108, title: "X-Men '97 (1. Sezon)", year: "2024", type: "series", eps: 10, epDuration: 32 },
+            { id: 109, title: "Madame Web", year: "2024", type: "movie", duration: 116 },
+            { id: 110, title: "Venom: The Last Dance", year: "2024", type: "movie", duration: 110 },
+            { id: 111, title: "Echo", year: "2024", type: "series", eps: 5, epDuration: 45 },
+            { id: 112, title: "Deadpool & Wolverine", year: "2024", type: "movie", duration: 128 },
+            { id: 113, title: "Agatha All Along", year: "2024", type: "series", eps: 9, epDuration: 40 },
+            { id: 114, title: "Eyes of Wakanda", year: "2025", type: "series", eps: 4, epDuration: 30 },
+            { id: 115, title: "Your Friendly Neighborhood Spider-Man", year: "2025", type: "series", eps: 10, epDuration: 25 },
+            { id: 116, title: "Daredevil: Born Again (1. Sezon)", year: "2025", type: "series", eps: 9, epDuration: 50 },
+            { id: 117, title: "Ironheart", year: "2025", type: "series", eps: 6, epDuration: 50 },
+            { id: 118, title: "Captain America: Brave New World", year: "2025", type: "movie", duration: 120 },
+            { id: 119, title: "Thunderbolts*", year: "2025", type: "movie", duration: 120 },
+            { id: 120, title: "The Fantastic Four: First Steps", year: "2025", type: "movie", duration: 120 },
+            { id: 121, title: "Marvel Zombies", year: "2025", type: "series", eps: 4, epDuration: 30 },
+            { id: 122, title: "Wonder Man", year: "2025", type: "series", eps: 8, epDuration: 45 },
+            { id: 123, title: "Spider-Man: Brand New Day", year: "2026", type: "movie", duration: 120 },
+            { id: 124, title: "Avengers: Doomsday", year: "2026", type: "movie", duration: 150 },
+            { id: 125, title: "Logan", year: "2029", type: "movie", duration: 137 }
         ];
 
-        // Process item list with sub-episodes & calculated per-episode runtime in minutes
-        const marvelData = rawData.map(item => {
-            const totalMinutes = Math.round(item.totalHours * 60);
-            const isSeries = item.category === "Dizi";
-            const episodes = [];
+        let userState = {};
+        let currentFilter = 'all';
 
-            if (isSeries && item.episodeCount > 1) {
-                const epDuration = Math.round(totalMinutes / item.episodeCount);
-                for (let i = 1; i <= item.episodeCount; i++) {
-                    episodes.push({
-                        epNumber: i,
-                        title: `${i}. Bölüm`,
-                        minutes: epDuration
+        // Load or initialize state from localStorage
+        function loadState() {
+            const saved = localStorage.getItem('mcu_tracker_state_v2');
+            if (saved) {
+                try {
+                    userState = JSON.parse(saved);
+                } catch(e) {
+                    userState = {};
+                }
+            }
+            
+            // Ensure every item has appropriate watched array
+            itemsData.forEach(item => {
+                if (!userState[item.id]) {
+                    const count = item.type === 'movie' ? 1 : item.eps;
+                    userState[item.id] = new Array(count).fill(false);
+                } else {
+                    // Fix array length if changed
+                    const count = item.type === 'movie' ? 1 : item.eps;
+                    if (userState[item.id].length !== count) {
+                        let arr = new Array(count).fill(false);
+                        for(let i=0; i<Math.min(arr.length, userState[item.id].length); i++) {
+                            arr[i] = userState[item.id][i];
+                        }
+                        userState[item.id] = arr;
+                    }
+                }
+            });
+        }
+
+        function saveState() {
+            localStorage.setItem('mcu_tracker_state_v2', JSON.stringify(userState));
+            renderApp();
+        }
+
+        function formatHoursMinutes(totalMinutes) {
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${hours}s ${minutes}dk`;
+        }
+
+        function updateStats() {
+            let totalMins = 0;
+            let watchedMins = 0;
+            let totalUnits = 0;
+            let watchedUnits = 0;
+
+            itemsData.forEach(item => {
+                const stateArr = userState[item.id] || [];
+                if (item.type === 'movie') {
+                    totalMins += item.duration;
+                    totalUnits += 1;
+                    if (stateArr[0]) {
+                        watchedMins += item.duration;
+                        watchedUnits += 1;
+                    }
+                } else {
+                    totalMins += item.eps * item.epDuration;
+                    totalUnits += item.eps;
+                    stateArr.forEach(watched => {
+                        if (watched) {
+                            watchedMins += item.epDuration;
+                            watchedUnits += 1;
+                        }
                     });
                 }
-            } else {
-                episodes.push({
-                    epNumber: 1,
-                    title: item.name,
-                    minutes: totalMinutes
-                });
-            }
-
-            return {
-                ...item,
-                totalMinutes,
-                isSeries,
-                episodes
-            };
-        });
-
-        // App State Loaded from LocalStorage
-        // Structure: { [itemId]: [ep1_checked, ep2_checked, ...] }
-        let userProgress = JSON.parse(localStorage.getItem('marvel_doomsday_episodes_v1')) || {};
-
-        // UI Filters State
-        let currentSearch = "";
-        let currentStatusFilter = "all";
-        let currentTypeFilter = "all";
-        let openAccordionId = null;
-
-        // Element References
-        const listContainer = document.getElementById('item-list-container');
-        const emptyState = document.getElementById('empty-state');
-        const searchInput = document.getElementById('search-input');
-        
-        const statRemainingTime = document.getElementById('stat-remaining-time');
-        const statWatchedTime = document.getElementById('stat-watched-time');
-        const statRemainingCount = document.getElementById('stat-remaining-count');
-        const statRemainingEpisodes = document.getElementById('stat-remaining-episodes');
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercent = document.getElementById('progress-percent');
-
-        // Helper: Convert Minutes to Hours and Minutes Display String
-        function formatDuration(minutes) {
-            const h = Math.floor(minutes / 60);
-            const m = Math.round(minutes % 60);
-            if (h === 0) return `${m}dk`;
-            if (m === 0) return `${h}s`;
-            return `${h}s ${m}dk`;
-        }
-
-        // Save State
-        function saveProgress() {
-            localStorage.setItem('marvel_doomsday_episodes_v1', JSON.stringify(userProgress));
-            renderStats();
-        }
-
-        // Show Toast Notification
-        function showToast(msg, iconClass = "fa-circle-check text-emerald-400") {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-msg');
-            const toastIcon = document.getElementById('toast-icon');
-            
-            toastMsg.textContent = msg;
-            toastIcon.className = `fa-solid ${iconClass} text-lg`;
-
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2500);
-        }
-
-        // Check if an entire item is completely watched
-        function isItemCompleted(item) {
-            const checkedEpArray = userProgress[item.id] || [];
-            return item.episodes.every((_, index) => !!checkedEpArray[index]);
-        }
-
-        // Check how many episodes of an item are watched
-        function getWatchedEpisodeCount(item) {
-            const checkedEpArray = userProgress[item.id] || [];
-            return item.episodes.filter((_, index) => !!checkedEpArray[index]).length;
-        }
-
-        // Calculate Overall Statistics
-        function calculateStats() {
-            let totalMinutesOverall = 0;
-            let watchedMinutesOverall = 0;
-
-            let totalItemsCount = marvelData.length;
-            let completedItemsCount = 0;
-
-            let totalEpisodesCount = 0;
-            let watchedEpisodesCount = 0;
-
-            marvelData.forEach(item => {
-                totalMinutesOverall += item.totalMinutes;
-                totalEpisodesCount += item.episodes.length;
-
-                const checkedEpArray = userProgress[item.id] || [];
-                let itemWatchedEps = 0;
-
-                item.episodes.forEach((ep, idx) => {
-                    if (checkedEpArray[idx]) {
-                        watchedMinutesOverall += ep.minutes;
-                        watchedEpisodesCount++;
-                        itemWatchedEps++;
-                    }
-                });
-
-                if (itemWatchedEps === item.episodes.length) {
-                    completedItemsCount++;
-                }
             });
 
-            const remainingMinutesOverall = Math.max(0, totalMinutesOverall - watchedMinutesOverall);
-            const remainingItemsCount = totalItemsCount - completedItemsCount;
-            const remainingEpisodesCount = totalEpisodesCount - watchedEpisodesCount;
-            const percentage = totalMinutesOverall > 0 ? Math.round((watchedMinutesOverall / totalMinutesOverall) * 100) : 0;
+            const remainingMins = totalMins - watchedMins;
+            const percentage = totalUnits > 0 ? ((watchedUnits / totalUnits) * 100).toFixed(1) : 0;
 
-            return {
-                remainingMinutesOverall,
-                watchedMinutesOverall,
-                totalMinutesOverall,
-                totalItemsCount,
-                completedItemsCount,
-                remainingItemsCount,
-                remainingEpisodesCount,
-                percentage
-            };
+            document.getElementById('statTotalTime').innerText = formatHoursMinutes(totalMins);
+            document.getElementById('statWatchedTime').innerText = formatHoursMinutes(watchedMins);
+            document.getElementById('statRemainingTime').innerText = formatHoursMinutes(remainingMins);
+            document.getElementById('statPercentage').innerText = `%${percentage}`;
+            document.getElementById('statWatchedEpisodes').innerText = `${watchedUnits} / ${totalUnits} Bölüm/Film`;
+            document.getElementById('statProgressBar').style.width = `${percentage}%`;
         }
 
-        // Render Stats Bar Header
-        function renderStats() {
-            const stats = calculateStats();
-
-            statRemainingTime.textContent = formatDuration(stats.remainingMinutesOverall);
-            statWatchedTime.textContent = formatDuration(stats.watchedMinutesOverall);
-            statRemainingCount.textContent = `${stats.remainingItemsCount} / ${stats.totalItemsCount}`;
-            statRemainingEpisodes.textContent = `${stats.remainingEpisodesCount} Bölüm`;
-
-            progressBar.style.width = `${stats.percentage}%`;
-            progressPercent.textContent = `%${stats.percentage}`;
+        function toggleItem(id, index = 0) {
+            if (!userState[id]) return;
+            userState[id][index] = !userState[id][index];
+            saveState();
         }
 
-        // Toggle Single Episode Checkmark
-        window.toggleEpisode = function(itemId, epIndex, event) {
-            if (event) event.stopPropagation();
-            if (!userProgress[itemId]) userProgress[itemId] = [];
-            
-            userProgress[itemId][epIndex] = !userProgress[itemId][epIndex];
-            saveProgress();
-            renderList();
-        };
+        function toggleSeason(id) {
+            const item = itemsData.find(i => i.id === id);
+            if (!item || item.type !== 'series') return;
+            const arr = userState[id];
+            const allWatched = arr.every(Boolean);
+            userState[id] = new Array(item.eps).fill(!allWatched);
+            saveState();
+        }
 
-        // Toggle Whole Item Checkmark (All Episodes at Once)
-        window.toggleWholeItem = function(itemId, event) {
-            if (event) event.stopPropagation();
-            const item = marvelData.find(i => i.id === itemId);
-            if (!item) return;
-
-            const currentlyComplete = isItemCompleted(item);
-            userProgress[itemId] = item.episodes.map(() => !currentlyComplete);
-            
-            saveProgress();
-            renderList();
-            showToast(currentlyComplete ? `"${item.name}" izlenmedi işaretlendi.` : `"${item.name}" tamamlandı!`);
-        };
-
-        // Accordion Toggle for Series Breakdown
-        window.toggleAccordion = function(itemId) {
-            openAccordionId = openAccordionId === itemId ? null : itemId;
-            renderList();
-        };
-
-        // Get Category Badge Style & Icon
-        function getCategoryBadge(category) {
-            switch(category) {
-                case 'Film':
-                    return `<span class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-red-950/70 text-red-400 border border-red-800/50 flex items-center gap-1"><i class="fa-solid fa-film"></i> Film</span>`;
-                case 'Dizi':
-                    return `<span class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-sky-950/70 text-sky-400 border border-sky-800/50 flex items-center gap-1"><i class="fa-solid fa-tv"></i> Dizi</span>`;
-                case 'Özel Bölüm':
-                    return `<span class="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-amber-950/70 text-amber-400 border border-amber-800/50 flex items-center gap-1"><i class="fa-solid fa-star"></i> Özel</span>`;
-                default:
-                    return '';
+        function toggleAccordion(id) {
+            const content = document.getElementById(`accordion-${id}`);
+            const icon = document.getElementById(`arrow-${id}`);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
             }
         }
 
-        // Render Main Items List
-        function renderList() {
-            listContainer.innerHTML = '';
-            
-            const filteredData = marvelData.filter(item => {
-                // Search filter
-                const matchesSearch = item.name.toLowerCase().includes(currentSearch.toLowerCase());
-                
-                // Type filter
-                const matchesType = currentTypeFilter === 'all' || item.category === currentTypeFilter;
-                
-                // Status filter
-                const completed = isItemCompleted(item);
-                let matchesStatus = true;
-                if (currentStatusFilter === 'completed') matchesStatus = completed;
-                if (currentStatusFilter === 'remaining') matchesStatus = !completed;
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-marvel-600', 'text-white');
+                btn.classList.add('bg-darkbase-900', 'text-gray-300', 'border', 'border-gray-700');
+            });
+            const activeBtn = document.getElementById(`filter-${filter}`);
+            activeBtn.classList.remove('bg-darkbase-900', 'text-gray-300', 'border', 'border-gray-700');
+            activeBtn.classList.add('bg-marvel-600', 'text-white');
+            renderItems();
+        }
 
-                return matchesSearch && matchesType && matchesStatus;
+        function filterItems() {
+            renderItems();
+        }
+
+        function renderItems() {
+            const container = document.getElementById('itemsContainer');
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+            container.innerHTML = '';
+
+            let filtered = itemsData.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(searchVal) || item.year.includes(searchVal);
+                if (!matchesSearch) return false;
+
+                const stateArr = userState[item.id] || [];
+                const allWatched = stateArr.every(Boolean);
+                const someWatched = stateArr.some(Boolean);
+
+                if (currentFilter === 'movie') return item.type === 'movie';
+                if (currentFilter === 'series') return item.type === 'series';
+                if (currentFilter === 'watched') return allWatched;
+                if (currentFilter === 'unwatched') return !allWatched;
+                return true;
             });
 
-            if (filteredData.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-darkbase-800 border border-gray-800 rounded-2xl p-12 text-center text-gray-400">
+                        <i class="fa-solid fa-film text-4xl mb-3 text-gray-600"></i>
+                        <p class="text-base font-semibold">Aradığınız kriterlere uygun yapım bulunamadı.</p>
+                    </div>
+                `;
+                return;
             }
 
-            filteredData.forEach(item => {
-                const completed = isItemCompleted(item);
-                const watchedEpCount = getWatchedEpisodeCount(item);
-                const isAccordionOpen = openAccordionId === item.id;
-                const savedEps = userProgress[item.id] || [];
+            filtered.forEach((item, idx) => {
+                const stateArr = userState[item.id] || [];
+                const watchedCount = stateArr.filter(Boolean).length;
+                const totalCount = item.type === 'movie' ? 1 : item.eps;
+                const isComplete = watchedCount === totalCount;
+                const progressPct = Math.round((watchedCount / totalCount) * 100);
 
                 const card = document.createElement('div');
-                card.className = `border rounded-xl transition-all duration-200 ${
-                    completed 
-                    ? 'bg-emerald-950/15 border-emerald-900/40 opacity-75 hover:opacity-100' 
-                    : 'bg-marvel-cardBg border-marvel-border hover:border-gray-600'
-                }`;
+                card.className = `bg-darkbase-800/90 border ${isComplete ? 'border-emerald-600/40 bg-emerald-950/10' : 'border-gray-800'} rounded-2xl p-4 sm:p-5 shadow-lg transition hover:border-gray-700`;
 
-                let episodeBreakdownHTML = '';
-                if (item.isSeries && item.episodes.length > 1) {
-                    const episodeItems = item.episodes.map((ep, idx) => {
-                        const isEpChecked = !!savedEps[idx];
-                        return `
-                            <div onclick="toggleEpisode('${item.id}', ${idx}, event)" 
-                                class="flex items-center justify-between p-2.5 rounded-lg border transition-all cursor-pointer ${
-                                    isEpChecked 
-                                    ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-300' 
-                                    : 'bg-marvel-darkBg/60 border-marvel-border/70 hover:bg-marvel-cardHover text-gray-300'
-                                }">
-                                <div class="flex items-center gap-2.5">
-                                    <input type="checkbox" ${isEpChecked ? 'checked' : ''} 
-                                        onclick="event.stopPropagation(); toggleEpisode('${item.id}', ${idx}, event)"
-                                        class="w-4 h-4 rounded accent-emerald-500 cursor-pointer">
-                                    <span class="text-xs font-medium ${isEpChecked ? 'line-through text-gray-400' : ''}">
-                                        ${ep.title}
-                                    </span>
+                if (item.type === 'movie') {
+                    card.innerHTML = `
+                        <div class="flex items-center justify-between gap-4">
+                            <div class="flex items-center space-x-4">
+                                <button onclick="toggleItem(${item.id}, 0)" class="w-7 h-7 rounded-lg border-2 ${stateArr[0] ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-gray-600 hover:border-marvel-500 bg-darkbase-900'} flex items-center justify-center transition shadow-sm cursor-pointer flex-shrink-0">
+                                    ${stateArr[0] ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
+                                </button>
+                                <div>
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <span class="text-xs font-bold text-gray-500">#${item.id}</span>
+                                        <h4 class="text-base font-bold text-white ${stateArr[0] ? 'line-through text-gray-400' : ''}">${item.title}</h4>
+                                    </div>
+                                    <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
+                                        <span><i class="fa-regular fa-calendar mr-1"></i> ${item.year}</span>
+                                        <span><i class="fa-regular fa-clock mr-1"></i> ${item.duration} dk</span>
+                                        <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-medium">Film / Kısa</span>
+                                    </div>
                                 </div>
-                                <span class="text-[11px] text-gray-400 font-mono">${formatDuration(ep.minutes)}</span>
                             </div>
+                            <div class="text-right hidden sm:block">
+                                <span class="text-xs font-semibold ${stateArr[0] ? 'text-emerald-400' : 'text-gray-400'}">${stateArr[0] ? 'İzlendi' : 'İzlenmedi'}</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Series card with accordion
+                    let epsHtml = '';
+                    for (let i = 0; i < item.eps; i++) {
+                        epsHtml += `
+                            <button onclick="toggleItem(${item.id}, ${i})" class="flex items-center justify-between p-2.5 rounded-xl border ${stateArr[i] ? 'bg-emerald-950/30 border-emerald-600/40 text-emerald-300' : 'bg-darkbase-900 border-gray-800 text-gray-300 hover:border-gray-700'} transition cursor-pointer text-left">
+                                <span class="text-xs font-medium">${i + 1}. Bölüm</span>
+                                <div class="w-5 h-5 rounded border ${stateArr[i] ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-gray-600 bg-darkbase-800'} flex items-center justify-center text-xs">
+                                    ${stateArr[i] ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
+                                </div>
+                            </button>
                         `;
-                    }).join('');
+                    }
 
-                    episodeBreakdownHTML = `
-                        <div class="${isAccordionOpen ? 'block' : 'hidden'} p-3 pt-0 border-t border-marvel-border/50 bg-black/20 rounded-b-xl">
-                            <div class="flex justify-between items-center mb-2 mt-2 px-1 text-xs text-gray-400 font-medium">
-                                <span>Bölüm Listesi (${watchedEpCount}/${item.episodeCount} İzlendi)</span>
-                                <span class="text-marvel-gold">~${formatDuration(Math.round(item.totalMinutes / item.episodeCount))} / bölüm</span>
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-between gap-4 cursor-pointer" onclick="toggleAccordion(${item.id})">
+                                <div class="flex items-center space-x-3">
+                                    <div class="bg-purple-500/10 text-purple-400 p-2.5 rounded-xl border border-purple-500/25 flex items-center justify-center">
+                                        <i class="fa-solid fa-tv text-sm"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <span class="text-xs font-bold text-gray-500">#${item.id}</span>
+                                            <h4 class="text-base font-bold text-white">${item.title}</h4>
+                                        </div>
+                                        <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
+                                            <span><i class="fa-regular fa-calendar mr-1"></i> ${item.year}</span>
+                                            <span><i class="fa-solid fa-layer-group mr-1"></i> ${item.eps} Bölüm (~${item.epDuration} dk/bölüm)</span>
+                                            <span class="text-emerald-400 font-semibold">${watchedCount}/${item.eps} İzlendi (%${progressPct})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <button onclick="event.stopPropagation(); toggleSeason(${item.id})" class="text-xs bg-darkbase-700 hover:bg-darkbase-600 text-gray-300 px-3 py-1.5 rounded-lg border border-gray-700 transition" title="Sezonun Tümünü İşaretle">
+                                        ${isComplete ? 'Tümünü Kaldır' : 'Tümünü İzle'}
+                                    </button>
+                                    <i id="arrow-${item.id}" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                                </div>
                             </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
-                                ${episodeItems}
+
+                            <!-- Progress Bar for Series -->
+                            <div class="w-full bg-gray-700/40 rounded-full h-1.5 mt-3 overflow-hidden">
+                                <div class="bg-gradient-to-r from-purple-500 to-emerald-500 h-1.5 rounded-full transition-all duration-300" style="width: ${progressPct}%"></div>
+                            </div>
+
+                            <!-- Accordion Episodes Drawer -->
+                            <div id="accordion-${item.id}" class="hidden mt-4 pt-4 border-t border-gray-800 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                                ${epsHtml}
                             </div>
                         </div>
                     `;
                 }
-
-                card.innerHTML = `
-                    <div class="p-4 flex items-center justify-between gap-3">
-                        <!-- Left Info & Checkbox -->
-                        <div class="flex items-center gap-3.5 flex-1 min-w-0 cursor-pointer" onclick="${item.isSeries && item.episodes.length > 1 ? `toggleAccordion('${item.id}')` : `toggleWholeItem('${item.id}', event)`}">
-                            <input type="checkbox" ${completed ? 'checked' : ''} 
-                                onclick="toggleWholeItem('${item.id}', event)"
-                                class="w-5 h-5 rounded accent-emerald-500 cursor-pointer shrink-0">
-
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center gap-2 flex-wrap mb-1">
-                                    <h3 class="text-sm sm:text-base font-bold text-gray-100 truncate ${completed ? 'line-through text-gray-400' : ''}">
-                                        ${item.name}
-                                    </h3>
-                                    ${getCategoryBadge(item.category)}
-                                </div>
-
-                                <div class="flex items-center gap-3 text-xs text-gray-400 font-medium flex-wrap">
-                                    <span class="flex items-center gap-1">
-                                        <i class="fa-regular fa-clock text-gray-500"></i> ${formatDuration(item.totalMinutes)}
-                                    </span>
-                                    <span>•</span>
-                                    <span>${item.isSeries ? `${item.episodeCount} Bölüm` : 'Tek Parça'}</span>
-                                    ${item.isSeries && item.episodes.length > 1 ? `
-                                        <span>•</span>
-                                        <span class="${watchedEpCount === item.episodeCount ? 'text-emerald-400 font-semibold' : 'text-amber-400'}">
-                                            ${watchedEpCount}/${item.episodeCount} Tamamlandı
-                                        </span>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Action / Accordion Button -->
-                        <div class="flex items-center gap-2 shrink-0">
-                            ${item.isSeries && item.episodes.length > 1 ? `
-                                <button onclick="toggleAccordion('${item.id}')" 
-                                    class="px-2.5 py-1.5 bg-marvel-darkBg hover:bg-gray-800 border border-marvel-border rounded-lg text-xs font-semibold text-gray-300 flex items-center gap-1.5 transition-colors">
-                                    <span>Bölümler</span>
-                                    <i class="fa-solid fa-chevron-${isAccordionOpen ? 'up' : 'down'} text-[10px] text-marvel-gold"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-                    </div>
-                    ${episodeBreakdownHTML}
-                `;
-
-                listContainer.appendChild(card);
+                container.appendChild(card);
             });
         }
 
-        // Event Listeners setup
-        document.addEventListener('DOMContentLoaded', () => {
-            renderStats();
-            renderList();
-
-            // Search input
-            searchInput.addEventListener('input', (e) => {
-                currentSearch = e.target.value;
-                renderList();
+        function markAllWatched() {
+            itemsData.forEach(item => {
+                const count = item.type === 'movie' ? 1 : item.eps;
+                userState[item.id] = new Array(count).fill(true);
             });
+            saveState();
+            showToast('Tüm yapımlar izlendi olarak işaretlendi!', 'success');
+        }
 
-            // Filter status buttons
-            document.querySelectorAll('.filter-status-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.filter-status-btn').forEach(b => {
-                        b.classList.remove('active-tab', 'bg-marvel-red', 'text-white');
-                        b.classList.add('text-gray-400');
-                    });
-                    e.target.classList.add('active-tab', 'bg-marvel-red', 'text-white');
-                    e.target.classList.remove('text-gray-400');
-                    
-                    currentStatusFilter = e.target.getAttribute('data-status');
-                    renderList();
-                });
+        function resetProgress() {
+            itemsData.forEach(item => {
+                const count = item.type === 'movie' ? 1 : item.eps;
+                userState[item.id] = new Array(count).fill(false);
             });
+            saveState();
+            showToast('Tüm ilerleme sıfırlandı.', 'info');
+        }
 
-            // Filter type buttons
-            document.querySelectorAll('.filter-type-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.filter-type-btn').forEach(b => {
-                        b.classList.remove('active-tab', 'bg-marvel-red', 'text-white');
-                        b.classList.add('text-gray-400');
-                    });
-                    e.target.classList.add('active-tab', 'bg-marvel-red', 'text-white');
-                    e.target.classList.remove('text-gray-400');
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `mcu_tracker_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('Veriler başarıyla dışa aktarıldı.', 'success');
+        }
 
-                    currentTypeFilter = e.target.getAttribute('data-type');
-                    renderList();
-                });
-            });
-
-            // Mark All Button
-            document.getElementById('btn-mark-all').addEventListener('click', () => {
-                marvelData.forEach(item => {
-                    userProgress[item.id] = item.episodes.map(() => true);
-                });
-                saveProgress();
-                renderList();
-                showToast("Tüm yapımlar izlendi olarak işaretlendi!", "fa-circle-check text-emerald-400");
-            });
-
-            // Reset All Button
-            document.getElementById('btn-reset-all').addEventListener('click', () => {
-                if (confirm("Tüm izleme ilerlemenizi sıfırlamak istediğinize emin misiniz?")) {
-                    userProgress = {};
-                    saveProgress();
-                    renderList();
-                    showToast("İlerlemeniz sıfırlandı.", "fa-rotate-left text-amber-400");
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    userState = parsed;
+                    saveState();
+                    showToast('Veriler başarıyla içe aktarıldı!', 'success');
+                } catch(err) {
+                    showToast('Geçersiz dosya formatı!', 'error');
                 }
-            });
-        });
+            };
+            reader.readAsText(file);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+
+            msgEl.innerText = message;
+            if (type === 'success') {
+                iconEl.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
+            } else if (type === 'info') {
+                iconEl.className = 'fa-solid fa-circle-info text-blue-400 text-lg';
+            } else {
+                iconEl.className = 'fa-solid fa-triangle-exclamation text-marvel-500 text-lg';
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function renderApp() {
+            updateStats();
+            renderItems();
+        }
+
+        // Initialize on window load
+        window.onload = function() {
+            loadState();
+            renderApp();
+        };
     </script>
 </body>
 </html>
