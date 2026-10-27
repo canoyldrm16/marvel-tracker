@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel Chronicle - Süper Kahraman Kronolojik İzleme Asistanı</title>
+    <title>Marvel Chronicle - Süper Kahraman Kronolojik İzleme ve Süre Takip Asistanı</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -232,8 +232,7 @@
             { id: 125, title: "Logan (2029)", type: "movie", duration: 137 }
         ];
 
-        // Veri Yapısı: LocalStorage Yönetimi
-        let userProgress = JSON.parse(localStorage.getItem('marvel_progress_v2')) || {};
+        let userProgress = JSON.parse(localStorage.getItem('marvel_progress')) || {};
 
         function initProgress() {
             rawData.forEach(item => {
@@ -249,11 +248,10 @@
         initProgress();
 
         function saveProgress() {
-            localStorage.setItem('marvel_progress_v2', JSON.stringify(userProgress));
+            localStorage.setItem('marvel_progress', JSON.stringify(userProgress));
             renderApp();
         }
 
-        // Süre Hesaplama Yardımcısı
         function formatMinutes(totalMins) {
             const hrs = Math.floor(totalMins / 60);
             const mins = totalMins % 60;
@@ -275,7 +273,6 @@
             const filterType = document.getElementById('filterSelect').value;
 
             rawData.forEach(item => {
-                // Süre hesapları
                 let itemTotalMins = item.type === 'movie' ? item.duration : (item.episodes * item.durationPerEp);
                 totalGlobalMins += itemTotalMins;
 
@@ -299,7 +296,6 @@
                 if (isItemFullyCompleted) completedItemCount++;
                 watchedGlobalMins += itemWatchedMins;
 
-                // Filtreleme Kontrolleri
                 const matchesSearch = item.title.toLowerCase().includes(searchQuery);
                 let matchesFilter = true;
                 if (filterType === 'movie') matchesFilter = item.type === 'movie';
@@ -309,7 +305,6 @@
 
                 if (!matchesSearch || !matchesFilter) return;
 
-                // Kart HTML Oluşturma
                 const card = document.createElement('div');
                 card.className = `bg-gray-900/90 border ${isItemFullyCompleted ? 'border-emerald-500/40 shadow-lg shadow-emerald-500/5' : 'border-gray-800'} rounded-2xl p-4 sm:p-5 transition-all`;
 
@@ -321,9 +316,6 @@
                     const watchedCount = eps.filter(Boolean).length;
                     percent = Math.round((watchedCount / item.episodes) * 100);
                 }
-
-                // Kalan süre hesaplama (Sezon/Film bazlı)
-                const remainingMins = itemTotalMins - itemWatchedMins;
 
                 let contentHtml = `
                     <div class="flex items-start justify-between gap-3 mb-3">
@@ -342,36 +334,22 @@
                             <button onclick="toggleItemFull(${item.id})" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition">
                                 ${isItemFullyCompleted ? 'Geri Al' : 'Tümünü İzle'}
                             </button>
-                            ${item.type === 'series' ? `
-                                <button onclick="toggleAccordion(${item.id})" class="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition">
-                                    <svg id="chevron-${item.id}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                </button>
-                            ` : ''}
                         </div>
                     </div>
 
-                    <!-- Meta Bilgiler -->
                     <div class="flex items-center gap-4 text-xs text-gray-400 mb-3 flex-wrap">
                         <span class="bg-gray-800/80 px-2.5 py-1 rounded-md border border-gray-700/50">${item.type === 'movie' ? `Film • ${item.duration} dk` : `Dizi • ${item.episodes} Bölüm (~${item.durationPerEp} dk/bölüm)`}</span>
-                        <span class="text-emerald-400 font-medium">${percent}% Tammlandı</span>
+                        <span class="text-emerald-400 font-medium">${percent}% Tamamlandı</span>
                     </div>
 
-                    <!-- İlerleme Çubuğu ve Kalan Süre -->
-                    <div class="mb-3">
-                        <div class="flex justify-between text-xs text-gray-400 mb-1">
-                            <span>Kalan Süre: <strong class="text-rose-400">${formatMinutes(remainingMins)}</strong></span>
-                            <span>Toplam: ${formatMinutes(itemTotalMins)}</span>
-                        </div>
-                        <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
-                            <div class="bg-gradient-to-r from-red-600 to-emerald-500 h-full transition-all duration-300" style="width: ${percent}%"></div>
-                        </div>
+                    <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+                        <div class="bg-gradient-to-r from-red-600 to-emerald-500 h-full transition-all duration-300" style="width: ${percent}%"></div>
                     </div>
                 `;
 
-                // Eğer diziyse bölüm listesi ekle
                 if (item.type === 'series') {
                     contentHtml += `
-                        <div id="episodes-${item.id}" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-3 pt-3 border-t border-gray-800/80">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-3 pt-3 border-t border-gray-800/80">
                     `;
                     for (let i = 0; i < item.episodes; i++) {
                         const isEpWatched = userProgress[item.id][i];
@@ -391,7 +369,6 @@
                 container.appendChild(card);
             });
 
-        // Global İstatistikleri Güncelle
             document.getElementById('statTotalItems').innerText = totalItemCount;
             document.getElementById('statWatchedItems').innerText = completedItemCount;
             document.getElementById('statTotalTime').innerText = formatMinutes(totalGlobalMins);
@@ -432,7 +409,7 @@
 
         function resetAll() {
             if (confirm('Tüm ilerlemeniz sıfırlanacak. Emin misiniz?')) {
-                localStorage.removeItem('marvel_progress_v2');
+                localStorage.removeItem('marvel_progress');
                 userProgress = {};
                 initProgress();
                 saveProgress();
@@ -469,7 +446,6 @@
             }
         }
 
-        // İlk Çalıştırma
         renderApp();
     </script>
 </body>
