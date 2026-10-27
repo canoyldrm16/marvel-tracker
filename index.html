@@ -1,652 +1,476 @@
 <!DOCTYPE html>
-<html lang="tr" class="dark">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marvel & Süper Kahraman Kronolojik İzleme Takibi</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        marvel: {
-                            50: '#fef2f2',
-                            100: '#fee2e2',
-                            500: '#ef4444',
-                            600: '#dc2626',
-                            700: '#b91c1c',
-                            800: '#991b1b',
-                            900: '#7f1d1d',
-                            950: '#450a0a',
-                        },
-                        darkbase: {
-                            900: '#0b0f19',
-                            800: '#111827',
-                            700: '#1f2937',
-                            600: '#374151'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Marvel Chronicle - Süper Kahraman Kronolojik İzleme Asistanı</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-            color: #f3f4f6;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #111827;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f3f4f6; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0b0f19; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #374151; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-marvel-600 selection:text-white">
-
-    <!-- Header / Banner -->
-    <header class="bg-gradient-to-r from-darkbase-900 via-marvel-950 to-darkbase-900 border-b border-marvel-900/40 shadow-2xl sticky top-0 z-40 backdrop-blur-md bg-opacity-95">
-        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center space-x-3">
-                <div class="bg-marvel-600 text-white p-3 rounded-xl shadow-lg shadow-marvel-600/30 flex items-center justify-center">
-                    <i class="fa-solid fa-clapperboard text-2xl"></i>
+<body class="min-h-screen pb-12">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-[#0b0f19]/90 backdrop-blur-md border-b border-gray-800/80 px-4 py-3">
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-rose-500 flex items-center justify-center shadow-lg shadow-red-500/30">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path></svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
-                        Marvel <span class="text-marvel-500">Chronicle</span>
+                    <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                        Marvel Chronicle
                     </h1>
-                    <p class="text-xs sm:text-sm text-gray-400">Süper Kahraman Kronolojik İzleme ve Süre Takip Asistanı</p>
+                    <p class="text-xs text-gray-400">Süper Kahraman Kronolojik İzleme ve Süre Takip Asistanı</p>
                 </div>
             </div>
             
-            <!-- Quick Action Buttons -->
-            <div class="flex flex-wrap items-center gap-2">
-                <button onclick="markAllWatched()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow-md transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-check-double"></i> Tümünü İzle
-                </button>
-                <button onclick="resetProgress()" class="bg-marvel-700 hover:bg-marvel-800 text-white px-3.5 py-2 rounded-lg text-xs font-semibold shadow-md transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-rotate-right"></i> Sıfırla
-                </button>
-                <button onclick="exportData()" class="bg-darkbase-700 hover:bg-darkbase-600 text-gray-200 px-3.5 py-2 rounded-lg text-xs font-semibold border border-gray-700 transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-download"></i> Dışa Aktar
-                </button>
-                <label class="bg-darkbase-700 hover:bg-darkbase-600 text-gray-200 px-3.5 py-2 rounded-lg text-xs font-semibold border border-gray-700 transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-upload"></i> İçe Aktar
+            <!-- Global Stats & Actions -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                <button onclick="toggleAll(true)" class="px-3 py-1.5 text-xs font-semibold bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition">✓ Tümünü İzle</button>
+                <button onclick="resetAll()" class="px-3 py-1.5 text-xs font-semibold bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg hover:bg-red-600/30 transition">↺ Sıfırla</button>
+                <button onclick="exportData()" class="px-3 py-1.5 text-xs font-semibold bg-gray-800 text-gray-300 border border-gray-700 rounded-lg hover:bg-gray-700 transition">↓ Dışa Aktar</button>
+                <label class="px-3 py-1.5 text-xs font-semibold bg-gray-800 text-gray-300 border border-gray-700 rounded-lg hover:bg-gray-700 transition cursor-pointer">
+                    ↑ İçe Aktar
                     <input type="file" id="importFile" onchange="importData(event)" class="hidden" accept=".json">
                 </label>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 w-full flex-grow">
-
-        <!-- Stats Dashboard -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <!-- Total Duration -->
-            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Toplam Süre</p>
-                    <h3 id="statTotalTime" class="text-2xl font-bold text-white mt-1">0s 0dk</h3>
-                    <p class="text-xs text-gray-500 mt-1">125 Yapım / Tüm Bölümler</p>
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 mt-6">
+        <!-- Dashboard Overview Card -->
+        <div class="bg-gray-900/80 border border-gray-800/80 rounded-2xl p-5 mb-6 shadow-xl backdrop-blur-sm">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                    <span class="text-xs text-gray-400 block mb-1">Toplam İçerik</span>
+                    <span id="statTotalItems" class="text-lg font-bold text-white">0</span>
                 </div>
-                <div class="bg-blue-500/10 text-blue-400 p-3.5 rounded-xl border border-blue-500/20">
-                    <i class="fa-solid fa-clock text-xl"></i>
+                <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                    <span class="text-xs text-gray-400 block mb-1">İzlenen</span>
+                    <span id="statWatchedItems" class="text-lg font-bold text-emerald-400">0</span>
                 </div>
-            </div>
-
-            <!-- Watched Duration -->
-            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">İzlenen Süre</p>
-                    <h3 id="statWatchedTime" class="text-2xl font-bold text-emerald-400 mt-1">0s 0dk</h3>
-                    <p class="text-xs text-gray-500 mt-1" id="statWatchedEpisodes">0 / 0 Bölüm/Film</p>
+                <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                    <span class="text-xs text-gray-400 block mb-1">Toplam Süre</span>
+                    <span id="statTotalTime" class="text-lg font-bold text-indigo-400">0 sa</span>
                 </div>
-                <div class="bg-emerald-500/10 text-emerald-400 p-3.5 rounded-xl border border-emerald-500/20">
-                    <i class="fa-solid fa-circle-check text-xl"></i>
+                <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                    <span class="text-xs text-gray-400 block mb-1">Kalan Süre</span>
+                    <span id="statRemainingTime" class="text-lg font-bold text-rose-400">0 sa</span>
                 </div>
             </div>
-
-            <!-- Remaining Duration -->
-            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
-                <div>
-                    <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Kalan Süre</p>
-                    <h3 id="statRemainingTime" class="text-2xl font-bold text-amber-400 mt-1">0s 0dk</h3>
-                    <p class="text-xs text-gray-500 mt-1">İzlenmesi Gereken</p>
+            <!-- Global Progress -->
+            <div class="mt-4">
+                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                    <span>Genel İlerleme</span>
+                    <span id="globalPercent">0%</span>
                 </div>
-                <div class="bg-amber-500/10 text-amber-400 p-3.5 rounded-xl border border-amber-500/20">
-                    <i class="fa-solid fa-hourglass-half text-xl"></i>
-                </div>
-            </div>
-
-            <!-- Completion Percentage -->
-            <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex flex-col justify-between">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <p class="text-xs font-medium text-gray-400 uppercase tracking-wider">Tamamlanma</p>
-                        <h3 id="statPercentage" class="text-2xl font-bold text-marvel-500 mt-1">%0.0</h3>
-                    </div>
-                    <div class="bg-marvel-500/10 text-marvel-400 p-3.5 rounded-xl border border-marvel-500/20">
-                        <i class="fa-solid fa-chart-pie text-xl"></i>
-                    </div>
-                </div>
-                <div class="w-full bg-gray-700/50 rounded-full h-2.5 mt-3 overflow-hidden">
-                    <div id="statProgressBar" class="bg-gradient-to-r from-marvel-600 to-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+                <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden">
+                    <div id="globalProgressBar" class="bg-gradient-to-r from-red-600 via-purple-600 to-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Filters & Search Bar -->
-        <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-4 mb-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
-            <!-- Search input -->
-            <div class="relative w-full md:w-80">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+        <!-- Filters & Search -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+            <div class="relative flex-1">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
-                <input type="text" id="searchInput" oninput="filterItems()" placeholder="Film veya dizi ara..." class="w-full bg-darkbase-900 border border-gray-700 text-gray-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-marvel-500 transition">
+                <input type="text" id="searchInput" oninput="filterItems()" placeholder="Film veya dizi ara..." class="w-full bg-gray-900/90 border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition">
             </div>
-
-            <!-- Category / Status Filters -->
-            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
-                <button onclick="setFilter('all')" id="filter-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-marvel-600 text-white shadow-md transition cursor-pointer">Tümü</button>
-                <button onclick="setFilter('movie')" id="filter-movie" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">Filmler & Kısalar</button>
-                <button onclick="setFilter('series')" id="filter-series" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">Diziler</button>
-                <button onclick="setFilter('watched')" id="filter-watched" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">İzlenenler</button>
-                <button onclick="setFilter('unwatched')" id="filter-unwatched" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">İzlenmeyenler</button>
+            <div class="flex gap-2">
+                <select id="filterSelect" onchange="filterItems()" class="bg-gray-900/90 border border-gray-800 rounded-xl px-4 py-2.5 text-sm text-gray-300 focus:outline-none focus:border-red-500 transition">
+                    <option value="all">Tümü</option>
+                    <option value="movie">Sadece Filmler / Tekli</option>
+                    <option value="series">Sadece Diziler</option>
+                    <option value="watched">İzlenenler</option>
+                    <option value="unwatched">İzlenmeyenler</option>
+                </select>
             </div>
         </div>
 
-        <!-- Chronological List Container -->
-        <div id="itemsContainer" class="space-y-3">
-            <!-- Dynamically populated -->
+        <!-- Items Container -->
+        <div id="itemsContainer" class="space-y-4">
+            <!-- Dinamik olarak dolacak -->
         </div>
-
     </main>
 
-    <!-- Custom Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-darkbase-800 border border-gray-700 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-        <span id="toastMessage" class="text-sm font-medium">İşlem başarılı</span>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-darkbase-900 border-t border-gray-800 py-6 mt-12 text-center text-xs text-gray-500">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p>Marvel & Superhero Chronological Watch Tracker &copy; 2026</p>
-            <p class="text-gray-400">Tüm bölümler ve süreler kronolojik sıraya göre hesaplanmıştır.</p>
-        </div>
-    </footer>
-
-    <!-- JavaScript Application Logic -->
     <script>
-        // Full Dataset of 125 Items provided by user
-        const itemsData = [
-            { id: 1, title: "Captain America: The First Avenger", year: "1942–1945", type: "movie", duration: 124 },
-            { id: 2, title: "Marvel One-Shot: Agent Carter", year: "1944", type: "movie", duration: 15 },
-            { id: 3, title: "Agent Carter (1. Sezon)", year: "1946", type: "series", eps: 8, epDuration: 42 },
-            { id: 4, title: "Agent Carter (2. Sezon)", year: "1947", type: "series", eps: 10, epDuration: 42 },
-            { id: 5, title: "X-Men: First Class", year: "1962", type: "movie", duration: 132 },
-            { id: 6, title: "X-Men Origins: Wolverine", year: "1979", type: "movie", duration: 107 },
-            { id: 7, title: "X-Men: Apocalypse", year: "1983", type: "movie", duration: 144 },
-            { id: 8, title: "X-Men: Dark Phoenix", year: "1992", type: "movie", duration: 113 },
-            { id: 9, title: "Captain Marvel", year: "1995", type: "movie", duration: 124 },
-            { id: 10, title: "Blade", year: "1998", type: "movie", duration: 120 },
-            { id: 11, title: "X-Men", year: "2000", type: "movie", duration: 104 },
-            { id: 12, title: "Blade II", year: "2002", type: "movie", duration: 117 },
-            { id: 13, title: "Spider-Man", year: "2002", type: "movie", duration: 121 },
-            { id: 14, title: "Daredevil", year: "2003", type: "movie", duration: 103 },
-            { id: 15, title: "X2: X-Men United", year: "2003", type: "movie", duration: 134 },
-            { id: 16, title: "Blade: Trinity", year: "2004", type: "movie", duration: 113 },
-            { id: 17, title: "The Punisher", year: "2004", type: "movie", duration: 124 },
-            { id: 18, title: "Spider-Man 2", year: "2004", type: "movie", duration: 127 },
-            { id: 19, title: "Elektra", year: "2005", type: "movie", duration: 97 },
-            { id: 20, title: "Fantastic Four", year: "2005", type: "movie", duration: 106 },
-            { id: 21, title: "X-Men: The Last Stand", year: "2006", type: "movie", duration: 104 },
-            { id: 22, title: "Spider-Man 3", year: "2007", type: "movie", duration: 139 },
-            { id: 23, title: "Fantastic Four: Rise of the Silver Surfer", year: "2007", type: "movie", duration: 92 },
-            { id: 24, title: "Iron Man", year: "2008", type: "movie", duration: 126 },
-            { id: 25, title: "Punisher: War Zone", year: "2008", type: "movie", duration: 103 },
-            { id: 26, title: "The Incredible Hulk", year: "2008", type: "movie", duration: 112 },
-            { id: 27, title: "Iron Man 2", year: "2010", type: "movie", duration: 124 },
-            { id: 28, title: "Marvel One-Shot: The Consultant", year: "2011", type: "movie", duration: 4 },
-            { id: 29, title: "Marvel One-Shot: A Funny Thing Happened on the Way to Thor's Hammer", year: "2011", type: "movie", duration: 4 },
-            { id: 30, title: "Thor", year: "2011", type: "movie", duration: 115 },
-            { id: 31, title: "Marvel One-Shot: Item 47", year: "2012", type: "movie", duration: 12 },
-            { id: 32, title: "The Amazing Spider-Man", year: "2012", type: "movie", duration: 136 },
-            { id: 33, title: "The Avengers", year: "2012", type: "movie", duration: 143 },
-            { id: 34, title: "Iron Man 3", year: "2013", type: "movie", duration: 130 },
-            { id: 35, title: "Marvel One-Shot: All Hail the King", year: "2013", type: "movie", duration: 14 },
-            { id: 36, title: "The Wolverine", year: "2013", type: "movie", duration: 126 },
-            { id: 37, title: "Thor: The Dark World", year: "2013", type: "movie", duration: 112 },
-            { id: 38, title: "Agents of S.H.I.E.L.D. (1. Sezon 1-7. Bölümler)", year: "2013", type: "series", eps: 7, epDuration: 43 },
-            { id: 39, title: "Captain America: The Winter Soldier", year: "2014", type: "movie", duration: 136 },
-            { id: 40, title: "Agents of S.H.I.E.L.D. (1. Sezon 8-22. Bölümler)", year: "2014", type: "series", eps: 15, epDuration: 43 },
-            { id: 41, title: "The Amazing Spider-Man 2", year: "2014", type: "movie", duration: 142 },
-            { id: 42, title: "X-Men: Days of Future Past", year: "2014", type: "movie", duration: 131 },
-            { id: 43, title: "Guardians of the Galaxy", year: "2014", type: "movie", duration: 121 },
-            { id: 44, title: "Guardians of the Galaxy Vol. 2", year: "2014", type: "movie", duration: 136 },
-            { id: 45, title: "I Am Groot (1. Sezon)", year: "2014", type: "series", eps: 5, epDuration: 4 },
-            { id: 46, title: "Fant4stic", year: "2015", type: "movie", duration: 100 },
-            { id: 47, title: "Daredevil (1. Sezon)", year: "2015", type: "series", eps: 13, epDuration: 54 },
-            { id: 48, title: "Jessica Jones (1. Sezon)", year: "2015", type: "series", eps: 13, epDuration: 52 },
-            { id: 49, title: "Agents of S.H.I.E.L.D. (2. Sezon)", year: "2014–2015", type: "series", eps: 22, epDuration: 43 },
-            { id: 50, title: "Avengers: Age of Ultron", year: "2015", type: "movie", duration: 141 },
-            { id: 51, title: "Ant-Man", year: "2015", type: "movie", duration: 117 },
-            { id: 52, title: "Daredevil (2. Sezon)", year: "2016", type: "series", eps: 13, epDuration: 54 },
-            { id: 53, title: "Luke Cage (1. Sezon)", year: "2016", type: "series", eps: 13, epDuration: 55 },
-            { id: 54, title: "Deadpool", year: "2016", type: "movie", duration: 108 },
-            { id: 55, title: "Captain America: Civil War", year: "2016", type: "movie", duration: 147 },
-            { id: 56, title: "Black Widow", year: "2016", type: "movie", duration: 134 },
-            { id: 57, title: "Black Panther", year: "2016", type: "movie", duration: 134 },
-            { id: 58, title: "Iron Fist (1. Sezon)", year: "2017", type: "series", eps: 13, epDuration: 55 },
-            { id: 59, title: "The Defenders", year: "2017", type: "series", eps: 8, epDuration: 50 },
-            { id: 60, title: "Spider-Man: Homecoming", year: "2016", type: "movie", duration: 133 },
-            { id: 61, title: "The Punisher (1. Sezon)", year: "2017", type: "series", eps: 13, epDuration: 53 },
-            { id: 62, title: "Doctor Strange", year: "2016–2017", type: "movie", duration: 115 },
-            { id: 63, title: "Agents of S.H.I.E.L.D. (3. ve 4. Sezonlar)", year: "2015–2017", type: "series", eps: 44, epDuration: 43 },
-            { id: 64, title: "Jessica Jones (2. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 52 },
-            { id: 65, title: "Luke Cage (2. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 55 },
-            { id: 66, title: "Iron Fist (2. Sezon)", year: "2018", type: "series", eps: 10, epDuration: 50 },
-            { id: 67, title: "Daredevil (3. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 50 },
-            { id: 68, title: "The Punisher (2. Sezon)", year: "2019", type: "series", eps: 13, epDuration: 50 },
-            { id: 69, title: "Jessica Jones (3. Sezon)", year: "2019", type: "series", eps: 13, epDuration: 52 },
-            { id: 70, title: "Cloak & Dagger (1. ve 2. Sezon)", year: "2018–2019", type: "series", eps: 20, epDuration: 45 },
-            { id: 71, title: "Runaways (1-3. Sezonlar)", year: "2017–2019", type: "series", eps: 33, epDuration: 45 },
-            { id: 72, title: "Inhumans (1. Sezon)", year: "2017", type: "series", eps: 8, epDuration: 43 },
-            { id: 73, title: "Helstrom (1. Sezon)", year: "2020", type: "series", eps: 10, epDuration: 50 },
-            { id: 74, title: "Thor: Ragnarok", year: "2017", type: "movie", duration: 130 },
-            { id: 75, title: "Ant-Man and the Wasp", year: "2018", type: "movie", duration: 118 },
-            { id: 76, title: "Avengers: Infinity War", year: "2018", type: "movie", duration: 149 },
-            { id: 77, title: "Venom", year: "2018", type: "movie", duration: 112 },
-            { id: 78, title: "Deadpool 2", year: "2018", type: "movie", duration: 119 },
-            { id: 79, title: "Avengers: Endgame", year: "2018–2023", type: "movie", duration: 181 },
-            { id: 80, title: "Agents of S.H.I.E.L.D. (5-7. Sezonlar)", year: "2017–2020", type: "series", eps: 48, epDuration: 43 },
-            { id: 81, title: "The New Mutants", year: "2020", type: "movie", duration: 94 },
-            { id: 82, title: "WandaVision", year: "2023", type: "series", eps: 9, epDuration: 35 },
-            { id: 83, title: "Loki (1. Sezon)", year: "2023", type: "series", eps: 6, epDuration: 50 },
-            { id: 84, title: "What If...? (1. Sezon)", year: "2023", type: "series", eps: 9, epDuration: 32 },
-            { id: 85, title: "Shang-Chi and the Legend of the Ten Rings", year: "2024", type: "movie", duration: 132 },
-            { id: 86, title: "The Falcon and the Winter Soldier", year: "2024", type: "series", eps: 6, epDuration: 50 },
-            { id: 87, title: "Eternals", year: "2024", type: "movie", duration: 156 },
-            { id: 88, title: "Spider-Man: Far From Home", year: "2024", type: "movie", duration: 129 },
-            { id: 89, title: "Venom: Let There Be Carnage", year: "2021", type: "movie", duration: 97 },
-            { id: 90, title: "Morbius", year: "2022", type: "movie", duration: 104 },
-            { id: 91, title: "Spider-Man: No Way Home", year: "2024", type: "movie", duration: 148 },
-            { id: 92, title: "Doctor Strange in the Multiverse of Madness", year: "2024", type: "movie", duration: 126 },
-            { id: 93, title: "Hawkeye", year: "2024", type: "series", eps: 6, epDuration: 45 },
-            { id: 94, title: "Moon Knight", year: "2025", type: "series", eps: 6, epDuration: 50 },
-            { id: 95, title: "She-Hulk: Attorney at Law", year: "2025", type: "series", eps: 9, epDuration: 30 },
-            { id: 96, title: "Ms. Marvel", year: "2025", type: "series", eps: 6, epDuration: 50 },
-            { id: 97, title: "Thor: Love and Thunder", year: "2025", type: "movie", duration: 118 },
-            { id: 98, title: "Werewolf by Night", year: "2025", type: "movie", duration: 53 },
-            { id: 99, title: "The Guardians of the Galaxy Holiday Special", year: "2025", type: "movie", duration: 44 },
-            { id: 100, title: "Black Panther: Wakanda Forever", year: "2025", type: "movie", duration: 161 },
-            { id: 101, title: "Ant-Man and the Wasp: Quantumania", year: "2026", type: "movie", duration: 124 },
-            { id: 102, title: "Guardians of the Galaxy Vol. 3", year: "2026", type: "movie", duration: 150 },
-            { id: 103, title: "I Am Groot (2. Sezon)", year: "2026", type: "series", eps: 5, epDuration: 4 },
-            { id: 104, title: "Secret Invasion", year: "2026", type: "series", eps: 6, epDuration: 50 },
-            { id: 105, title: "Loki (2. Sezon)", year: "2026", type: "series", eps: 6, epDuration: 50 },
-            { id: 106, title: "The Marvels", year: "2026", type: "movie", duration: 105 },
-            { id: 107, title: "What If...? (2. ve 3. Sezon)", year: "2023–2024", type: "series", eps: 17, epDuration: 32 },
-            { id: 108, title: "X-Men '97 (1. Sezon)", year: "2024", type: "series", eps: 10, epDuration: 32 },
-            { id: 109, title: "Madame Web", year: "2024", type: "movie", duration: 116 },
-            { id: 110, title: "Venom: The Last Dance", year: "2024", type: "movie", duration: 110 },
-            { id: 111, title: "Echo", year: "2024", type: "series", eps: 5, epDuration: 45 },
-            { id: 112, title: "Deadpool & Wolverine", year: "2024", type: "movie", duration: 128 },
-            { id: 113, title: "Agatha All Along", year: "2024", type: "series", eps: 9, epDuration: 40 },
-            { id: 114, title: "Eyes of Wakanda", year: "2025", type: "series", eps: 4, epDuration: 30 },
-            { id: 115, title: "Your Friendly Neighborhood Spider-Man", year: "2025", type: "series", eps: 10, epDuration: 25 },
-            { id: 116, title: "Daredevil: Born Again (1. Sezon)", year: "2025", type: "series", eps: 9, epDuration: 50 },
-            { id: 117, title: "Ironheart", year: "2025", type: "series", eps: 6, epDuration: 50 },
-            { id: 118, title: "Captain America: Brave New World", year: "2025", type: "movie", duration: 120 },
-            { id: 119, title: "Thunderbolts*", year: "2025", type: "movie", duration: 120 },
-            { id: 120, title: "The Fantastic Four: First Steps", year: "2025", type: "movie", duration: 120 },
-            { id: 121, title: "Marvel Zombies", year: "2025", type: "series", eps: 4, epDuration: 30 },
-            { id: 122, title: "Wonder Man", year: "2025", type: "series", eps: 8, epDuration: 45 },
-            { id: 123, title: "Spider-Man: Brand New Day", year: "2026", type: "movie", duration: 120 },
-            { id: 124, title: "Avengers: Doomsday", year: "2026", type: "movie", duration: 150 },
-            { id: 125, title: "Logan", year: "2029", type: "movie", duration: 137 }
+        // Tüm 125 İçerik Listesi ve Bölüm Bilgileri
+        const rawData = [
+            { id: 1, title: "Captain America: The First Avenger (1942–1945)", type: "movie", duration: 124 },
+            { id: 2, title: "Marvel One-Shot: Agent Carter (1944)", type: "movie", duration: 15 },
+            { id: 3, title: "Agent Carter (1. Sezon) (1946)", type: "series", episodes: 8, durationPerEp: 43 },
+            { id: 4, title: "Agent Carter (2. Sezon) (1947)", type: "series", episodes: 10, durationPerEp: 43 },
+            { id: 5, title: "X-Men: First Class (1962)", type: "movie", duration: 132 },
+            { id: 6, title: "X-Men Origins: Wolverine (1979)", type: "movie", duration: 107 },
+            { id: 7, title: "X-Men: Apocalypse (1983)", type: "movie", duration: 144 },
+            { id: 8, title: "X-Men: Dark Phoenix (1992)", type: "movie", duration: 113 },
+            { id: 9, title: "Captain Marvel (1995)", type: "movie", duration: 124 },
+            { id: 10, title: "Blade (1998)", type: "movie", duration: 120 },
+            { id: 11, title: "X-Men (2000)", type: "movie", duration: 104 },
+            { id: 12, title: "Blade II (2002)", type: "movie", duration: 117 },
+            { id: 13, title: "Spider-Man (2002)", type: "movie", duration: 121 },
+            { id: 14, title: "Daredevil (2003)", type: "movie", duration: 133 },
+            { id: 15, title: "X2: X-Men United (2003)", type: "movie", duration: 134 },
+            { id: 16, title: "Blade: Trinity (2004)", type: "movie", duration: 113 },
+            { id: 17, title: "The Punisher (2004)", type: "movie", duration: 124 },
+            { id: 18, title: "Spider-Man 2 (2004)", type: "movie", duration: 127 },
+            { id: 19, title: "Elektra (2005)", type: "movie", duration: 97 },
+            { id: 20, title: "Fantastic Four (2005)", type: "movie", duration: 106 },
+            { id: 21, title: "X-Men: The Last Stand (2006)", type: "movie", duration: 104 },
+            { id: 22, title: "Spider-Man 3 (2007)", type: "movie", duration: 139 },
+            { id: 23, title: "Fantastic Four: Rise of the Silver Surfer (2007)", type: "movie", duration: 92 },
+            { id: 24, title: "Iron Man (2008)", type: "movie", duration: 126 },
+            { id: 25, title: "Punisher: War Zone (2008)", type: "movie", duration: 103 },
+            { id: 26, title: "The Incredible Hulk (2008)", type: "movie", duration: 112 },
+            { id: 27, title: "Iron Man 2 (2010)", type: "movie", duration: 124 },
+            { id: 28, title: "Marvel One-Shot: The Consultant (2011)", type: "movie", duration: 4 },
+            { id: 29, title: "Marvel One-Shot: A Funny Thing Happened on the Way to Thor's Hammer (2011)", type: "movie", duration: 4 },
+            { id: 30, title: "Thor (2011)", type: "movie", duration: 115 },
+            { id: 31, title: "Marvel One-Shot: Item 47 (2012)", type: "movie", duration: 12 },
+            { id: 32, title: "The Amazing Spider-Man (2012)", type: "movie", duration: 136 },
+            { id: 33, title: "The Avengers (2012)", type: "movie", duration: 143 },
+            { id: 34, title: "Iron Man 3 (2013)", type: "movie", duration: 130 },
+            { id: 35, title: "Marvel One-Shot: All Hail the King (2013)", type: "movie", duration: 14 },
+            { id: 36, title: "The Wolverine (2013)", type: "movie", duration: 126 },
+            { id: 37, title: "Thor: The Dark World (2013)", type: "movie", duration: 112 },
+            { id: 38, title: "Agents of S.H.I.E.L.D. (1. Sezon 1-7. Bölümler) (2013)", type: "series", episodes: 7, durationPerEp: 43 },
+            { id: 39, title: "Captain America: The Winter Soldier (2014)", type: "movie", duration: 136 },
+            { id: 40, title: "Agents of S.H.I.E.L.D. (1. Sezon 8-22. Bölümler) (2014)", type: "series", episodes: 15, durationPerEp: 43 },
+            { id: 41, title: "The Amazing Spider-Man 2 (2014)", type: "movie", duration: 142 },
+            { id: 42, title: "X-Men: Days of Future Past (2014)", type: "movie", duration: 131 },
+            { id: 43, title: "Guardians of the Galaxy (2014)", type: "movie", duration: 121 },
+            { id: 44, title: "Guardians of the Galaxy Vol. 2 (2014)", type: "movie", duration: 136 },
+            { id: 45, title: "I Am Groot (1. Sezon) (2014)", type: "series", episodes: 5, durationPerEp: 5 },
+            { id: 46, title: "Fant4stic (2015)", type: "movie", duration: 100 },
+            { id: 47, title: "Daredevil (1. Sezon) (2015)", type: "series", episodes: 13, durationPerEp: 54 },
+            { id: 48, title: "Jessica Jones (1. Sezon) (2015)", type: "series", episodes: 13, durationPerEp: 52 },
+            { id: 49, title: "Agents of S.H.I.E.L.D. (2. Sezon) (2014–2015)", type: "series", episodes: 22, durationPerEp: 43 },
+            { id: 50, title: "Avengers: Age of Ultron (2015)", type: "movie", duration: 141 },
+            { id: 51, title: "Ant-Man (2015)", type: "movie", duration: 117 },
+            { id: 52, title: "Daredevil (2. Sezon) (2016)", type: "series", episodes: 13, durationPerEp: 54 },
+            { id: 53, title: "Luke Cage (1. Sezon) (2016)", type: "series", episodes: 13, durationPerEp: 55 },
+            { id: 54, title: "Deadpool (2016)", type: "movie", duration: 108 },
+            { id: 55, title: "Captain America: Civil War (2016)", type: "movie", duration: 147 },
+            { id: 56, title: "Black Widow (2016)", type: "movie", duration: 134 },
+            { id: 57, title: "Black Panther (2016)", type: "movie", duration: 134 },
+            { id: 58, title: "Iron Fist (1. Sezon) (2017)", type: "series", episodes: 13, durationPerEp: 55 },
+            { id: 59, title: "The Defenders (2017)", type: "series", episodes: 8, durationPerEp: 50 },
+            { id: 60, title: "Spider-Man: Homecoming (2016)", type: "movie", duration: 133 },
+            { id: 61, title: "The Punisher (1. Sezon) (2017)", type: "series", episodes: 13, durationPerEp: 53 },
+            { id: 62, title: "Doctor Strange (2016–2017)", type: "movie", duration: 115 },
+            { id: 63, title: "Agents of S.H.I.E.L.D. (3. ve 4. Sezonlar) (2015–2017)", type: "series", episodes: 44, durationPerEp: 43 },
+            { id: 64, title: "Jessica Jones (2. Sezon) (2018)", type: "series", episodes: 13, durationPerEp: 52 },
+            { id: 65, title: "Luke Cage (2. Sezon) (2018)", type: "series", episodes: 13, durationPerEp: 55 },
+            { id: 66, title: "Iron Fist (2. Sezon) (2018)", type: "series", episodes: 10, durationPerEp: 50 },
+            { id: 67, title: "Daredevil (3. Sezon) (2018)", type: "series", episodes: 13, durationPerEp: 50 },
+            { id: 68, title: "The Punisher (2. Sezon) (2019)", type: "series", episodes: 13, durationPerEp: 50 },
+            { id: 69, title: "Jessica Jones (3. Sezon) (2019)", type: "series", episodes: 13, durationPerEp: 52 },
+            { id: 70, title: "Cloak & Dagger (1. ve 2. Sezon) (2018–2019)", type: "series", episodes: 20, durationPerEp: 42 },
+            { id: 71, title: "Runaways (1-3. Sezonlar) (2017–2019)", type: "series", episodes: 33, durationPerEp: 45 },
+            { id: 72, title: "Inhumans (1. Sezon) (2017)", type: "series", episodes: 8, durationPerEp: 43 },
+            { id: 73, title: "Helstrom (1. Sezon) (2020)", type: "series", episodes: 10, durationPerEp: 50 },
+            { id: 74, title: "Thor: Ragnarok (2017)", type: "movie", duration: 130 },
+            { id: 75, title: "Ant-Man and the Wasp (2018)", type: "movie", duration: 118 },
+            { id: 76, title: "Avengers: Infinity War (2018)", type: "movie", duration: 149 },
+            { id: 77, title: "Venom (2018)", type: "movie", duration: 112 },
+            { id: 78, title: "Deadpool 2 (2018)", type: "movie", duration: 119 },
+            { id: 79, title: "Avengers: Endgame (2018–2023)", type: "movie", duration: 181 },
+            { id: 80, title: "Agents of S.H.I.E.L.D. (5-7. Sezonlar) (2017–2020)", type: "series", episodes: 36, durationPerEp: 43 },
+            { id: 81, title: "The New Mutants (2020)", type: "movie", duration: 94 },
+            { id: 82, title: "WandaVision (2023)", type: "series", episodes: 9, durationPerEp: 35 },
+            { id: 83, title: "Loki (1. Sezon) (2023)", type: "series", episodes: 6, durationPerEp: 50 },
+            { id: 84, title: "What If...? (1. Sezon) (2023)", type: "series", episodes: 9, durationPerEp: 32 },
+            { id: 85, title: "Shang-Chi and the Legend of the Ten Rings (2024)", type: "movie", duration: 132 },
+            { id: 86, title: "The Falcon and the Winter Soldier (2024)", type: "series", episodes: 6, durationPerEp: 50 },
+            { id: 87, title: "Eternals (2024)", type: "movie", duration: 156 },
+            { id: 88, title: "Spider-Man: Far From Home (2024)", type: "movie", duration: 129 },
+            { id: 89, title: "Venom: Let There Be Carnage (2021)", type: "movie", duration: 97 },
+            { id: 90, title: "Morbius (2022)", type: "movie", duration: 104 },
+            { id: 91, title: "Spider-Man: No Way Home (2024)", type: "movie", duration: 148 },
+            { id: 92, title: "Doctor Strange in the Multiverse of Madness (2024)", type: "movie", duration: 126 },
+            { id: 93, title: "Hawkeye (2024)", type: "series", episodes: 6, durationPerEp: 45 },
+            { id: 94, title: "Moon Knight (2025)", type: "series", episodes: 6, durationPerEp: 47 },
+            { id: 95, title: "She-Hulk: Attorney at Law (2025)", type: "series", episodes: 9, durationPerEp: 30 },
+            { id: 96, title: "Ms. Marvel (2025)", type: "series", episodes: 6, durationPerEp: 50 },
+            { id: 97, title: "Thor: Love and Thunder (2025)", type: "movie", duration: 119 },
+            { id: 98, title: "Werewolf by Night (2025)", type: "movie", duration: 53 },
+            { id: 99, title: "The Guardians of the Galaxy Holiday Special (2025)", type: "movie", duration: 44 },
+            { id: 100, title: "Black Panther: Wakanda Forever (2025)", type: "movie", duration: 161 },
+            { id: 101, title: "Ant-Man and the Wasp: Quantumania (2026)", type: "movie", duration: 125 },
+            { id: 102, title: "Guardians of the Galaxy Vol. 3 (2026)", type: "movie", duration: 150 },
+            { id: 103, title: "I Am Groot (2. Sezon) (2026)", type: "series", episodes: 5, durationPerEp: 5 },
+            { id: 104, title: "Secret Invasion (2026)", type: "series", episodes: 6, durationPerEp: 50 },
+            { id: 105, title: "Loki (2. Sezon) (2026)", type: "series", episodes: 6, durationPerEp: 50 },
+            { id: 106, title: "The Marvels (2026)", type: "movie", duration: 105 },
+            { id: 107, title: "What If...? (2. ve 3. Sezon) (2023–2024)", type: "series", episodes: 17, durationPerEp: 32 },
+            { id: 108, title: "X-Men '97 (1. Sezon) (2024)", type: "series", episodes: 10, durationPerEp: 30 },
+            { id: 109, title: "Madame Web (2024)", type: "movie", duration: 116 },
+            { id: 110, title: "Venom: The Last Dance (2024)", type: "movie", duration: 110 },
+            { id: 111, title: "Echo (2024)", type: "series", episodes: 5, durationPerEp: 45 },
+            { id: 112, title: "Deadpool & Wolverine (2024)", type: "movie", duration: 128 },
+            { id: 113, title: "Agatha All Along (2024)", type: "series", episodes: 9, durationPerEp: 40 },
+            { id: 114, title: "Eyes of Wakanda (2025)", type: "series", episodes: 4, durationPerEp: 30 },
+            { id: 115, title: "Your Friendly Neighborhood Spider-Man (2025)", type: "series", episodes: 10, durationPerEp: 30 },
+            { id: 116, title: "Daredevil: Born Again (1. Sezon) (2025)", type: "series", episodes: 9, durationPerEp: 50 },
+            { id: 117, title: "Ironheart (2025)", type: "series", episodes: 6, durationPerEp: 50 },
+            { id: 118, title: "Captain America: Brave New World (2025)", type: "movie", duration: 120 },
+            { id: 119, title: "Thunderbolts* (2025)", type: "movie", duration: 120 },
+            { id: 120, title: "The Fantastic Four: First Steps (2025)", type: "movie", duration: 120 },
+            { id: 121, title: "Marvel Zombies (2025)", type: "series", episodes: 4, durationPerEp: 30 },
+            { id: 122, title: "Wonder Man (2025)", type: "series", episodes: 8, durationPerEp: 40 },
+            { id: 123, title: "Spider-Man: Brand New Day (2026)", type: "movie", duration: 125 },
+            { id: 124, title: "Avengers: Doomsday (2026)", type: "movie", duration: 150 },
+            { id: 125, title: "Logan (2029)", type: "movie", duration: 137 }
         ];
 
-        let userState = {};
-        let currentFilter = 'all';
+        // Veri Yapısı: LocalStorage Yönetimi
+        let userProgress = JSON.parse(localStorage.getItem('marvel_progress_v2')) || {};
 
-        // Load or initialize state from localStorage
-        function loadState() {
-            const saved = localStorage.getItem('mcu_tracker_state_v2');
-            if (saved) {
-                try {
-                    userState = JSON.parse(saved);
-                } catch(e) {
-                    userState = {};
-                }
-            }
-            
-            // Ensure every item has appropriate watched array
-            itemsData.forEach(item => {
-                if (!userState[item.id]) {
-                    const count = item.type === 'movie' ? 1 : item.eps;
-                    userState[item.id] = new Array(count).fill(false);
-                } else {
-                    // Fix array length if changed
-                    const count = item.type === 'movie' ? 1 : item.eps;
-                    if (userState[item.id].length !== count) {
-                        let arr = new Array(count).fill(false);
-                        for(let i=0; i<Math.min(arr.length, userState[item.id].length); i++) {
-                            arr[i] = userState[item.id][i];
-                        }
-                        userState[item.id] = arr;
+        function initProgress() {
+            rawData.forEach(item => {
+                if (!userProgress[item.id]) {
+                    if (item.type === 'movie') {
+                        userProgress[item.id] = false;
+                    } else {
+                        userProgress[item.id] = new Array(item.episodes).fill(false);
                     }
                 }
             });
         }
+        initProgress();
 
-        function saveState() {
-            localStorage.setItem('mcu_tracker_state_v2', JSON.stringify(userState));
+        function saveProgress() {
+            localStorage.setItem('marvel_progress_v2', JSON.stringify(userProgress));
             renderApp();
         }
 
-        function formatHoursMinutes(totalMinutes) {
-            const hours = Math.floor(totalMinutes / 60);
-            const minutes = totalMinutes % 60;
-            return `${hours}s ${minutes}dk`;
+        // Süre Hesaplama Yardımcısı
+        function formatMinutes(totalMins) {
+            const hrs = Math.floor(totalMins / 60);
+            const mins = totalMins % 60;
+            if (hrs === 0) return `${mins} dk`;
+            if (mins === 0) return `${hrs} sa`;
+            return `${hrs} sa ${mins} dk`;
         }
 
-        function updateStats() {
-            let totalMins = 0;
-            let watchedMins = 0;
-            let totalUnits = 0;
-            let watchedUnits = 0;
-
-            itemsData.forEach(item => {
-                const stateArr = userState[item.id] || [];
-                if (item.type === 'movie') {
-                    totalMins += item.duration;
-                    totalUnits += 1;
-                    if (stateArr[0]) {
-                        watchedMins += item.duration;
-                        watchedUnits += 1;
-                    }
-                } else {
-                    totalMins += item.eps * item.epDuration;
-                    totalUnits += item.eps;
-                    stateArr.forEach(watched => {
-                        if (watched) {
-                            watchedMins += item.epDuration;
-                            watchedUnits += 1;
-                        }
-                    });
-                }
-            });
-
-            const remainingMins = totalMins - watchedMins;
-            const percentage = totalUnits > 0 ? ((watchedUnits / totalUnits) * 100).toFixed(1) : 0;
-
-            document.getElementById('statTotalTime').innerText = formatHoursMinutes(totalMins);
-            document.getElementById('statWatchedTime').innerText = formatHoursMinutes(watchedMins);
-            document.getElementById('statRemainingTime').innerText = formatHoursMinutes(remainingMins);
-            document.getElementById('statPercentage').innerText = `%${percentage}`;
-            document.getElementById('statWatchedEpisodes').innerText = `${watchedUnits} / ${totalUnits} Bölüm/Film`;
-            document.getElementById('statProgressBar').style.width = `${percentage}%`;
-        }
-
-        function toggleItem(id, index = 0) {
-            if (!userState[id]) return;
-            userState[id][index] = !userState[id][index];
-            saveState();
-        }
-
-        function toggleSeason(id) {
-            const item = itemsData.find(i => i.id === id);
-            if (!item || item.type !== 'series') return;
-            const arr = userState[id];
-            const allWatched = arr.every(Boolean);
-            userState[id] = new Array(item.eps).fill(!allWatched);
-            saveState();
-        }
-
-        function toggleAccordion(id) {
-            const content = document.getElementById(`accordion-${id}`);
-            const icon = document.getElementById(`arrow-${id}`);
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        function setFilter(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('bg-marvel-600', 'text-white');
-                btn.classList.add('bg-darkbase-900', 'text-gray-300', 'border', 'border-gray-700');
-            });
-            const activeBtn = document.getElementById(`filter-${filter}`);
-            activeBtn.classList.remove('bg-darkbase-900', 'text-gray-300', 'border', 'border-gray-700');
-            activeBtn.classList.add('bg-marvel-600', 'text-white');
-            renderItems();
-        }
-
-        function filterItems() {
-            renderItems();
-        }
-
-        function renderItems() {
+        function renderApp() {
             const container = document.getElementById('itemsContainer');
-            const searchVal = document.getElementById('searchInput').value.toLowerCase();
             container.innerHTML = '';
 
-            let filtered = itemsData.filter(item => {
-                const matchesSearch = item.title.toLowerCase().includes(searchVal) || item.year.includes(searchVal);
-                if (!matchesSearch) return false;
+            let totalGlobalMins = 0;
+            let watchedGlobalMins = 0;
+            let totalItemCount = rawData.length;
+            let completedItemCount = 0;
 
-                const stateArr = userState[item.id] || [];
-                const allWatched = stateArr.every(Boolean);
-                const someWatched = stateArr.some(Boolean);
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const filterType = document.getElementById('filterSelect').value;
 
-                if (currentFilter === 'movie') return item.type === 'movie';
-                if (currentFilter === 'series') return item.type === 'series';
-                if (currentFilter === 'watched') return allWatched;
-                if (currentFilter === 'unwatched') return !allWatched;
-                return true;
-            });
+            rawData.forEach(item => {
+                // Süre hesapları
+                let itemTotalMins = item.type === 'movie' ? item.duration : (item.episodes * item.durationPerEp);
+                totalGlobalMins += itemTotalMins;
 
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="bg-darkbase-800 border border-gray-800 rounded-2xl p-12 text-center text-gray-400">
-                        <i class="fa-solid fa-film text-4xl mb-3 text-gray-600"></i>
-                        <p class="text-base font-semibold">Aradığınız kriterlere uygun yapım bulunamadı.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            filtered.forEach((item, idx) => {
-                const stateArr = userState[item.id] || [];
-                const watchedCount = stateArr.filter(Boolean).length;
-                const totalCount = item.type === 'movie' ? 1 : item.eps;
-                const isComplete = watchedCount === totalCount;
-                const progressPct = Math.round((watchedCount / totalCount) * 100);
-
-                const card = document.createElement('div');
-                card.className = `bg-darkbase-800/90 border ${isComplete ? 'border-emerald-600/40 bg-emerald-950/10' : 'border-gray-800'} rounded-2xl p-4 sm:p-5 shadow-lg transition hover:border-gray-700`;
+                let itemWatchedMins = 0;
+                let isItemFullyCompleted = false;
 
                 if (item.type === 'movie') {
-                    card.innerHTML = `
-                        <div class="flex items-center justify-between gap-4">
-                            <div class="flex items-center space-x-4">
-                                <button onclick="toggleItem(${item.id}, 0)" class="w-7 h-7 rounded-lg border-2 ${stateArr[0] ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-gray-600 hover:border-marvel-500 bg-darkbase-900'} flex items-center justify-center transition shadow-sm cursor-pointer flex-shrink-0">
-                                    ${stateArr[0] ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
-                                </button>
-                                <div>
-                                    <div class="flex items-center gap-2 flex-wrap">
-                                        <span class="text-xs font-bold text-gray-500">#${item.id}</span>
-                                        <h4 class="text-base font-bold text-white ${stateArr[0] ? 'line-through text-gray-400' : ''}">${item.title}</h4>
-                                    </div>
-                                    <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
-                                        <span><i class="fa-regular fa-calendar mr-1"></i> ${item.year}</span>
-                                        <span><i class="fa-regular fa-clock mr-1"></i> ${item.duration} dk</span>
-                                        <span class="px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 font-medium">Film / Kısa</span>
-                                    </div>
-                                </div>
+                    if (userProgress[item.id]) {
+                        itemWatchedMins = item.duration;
+                        isItemFullyCompleted = true;
+                    }
+                } else {
+                    const eps = userProgress[item.id] || [];
+                    const watchedCount = eps.filter(Boolean).length;
+                    itemWatchedMins = watchedCount * item.durationPerEp;
+                    if (watchedCount === item.episodes) {
+                        isItemFullyCompleted = true;
+                    }
+                }
+
+                if (isItemFullyCompleted) completedItemCount++;
+                watchedGlobalMins += itemWatchedMins;
+
+                // Filtreleme Kontrolleri
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery);
+                let matchesFilter = true;
+                if (filterType === 'movie') matchesFilter = item.type === 'movie';
+                if (filterType === 'series') matchesFilter = item.type === 'series';
+                if (filterType === 'watched') matchesFilter = isItemFullyCompleted;
+                if (filterType === 'unwatched') matchesFilter = !isItemFullyCompleted;
+
+                if (!matchesSearch || !matchesFilter) return;
+
+                // Kart HTML Oluşturma
+                const card = document.createElement('div');
+                card.className = `bg-gray-900/90 border ${isItemFullyCompleted ? 'border-emerald-500/40 shadow-lg shadow-emerald-500/5' : 'border-gray-800'} rounded-2xl p-4 sm:p-5 transition-all`;
+
+                let percent = 0;
+                if (item.type === 'movie') {
+                    percent = userProgress[item.id] ? 100 : 0;
+                } else {
+                    const eps = userProgress[item.id] || [];
+                    const watchedCount = eps.filter(Boolean).length;
+                    percent = Math.round((watchedCount / item.episodes) * 100);
+                }
+
+                // Kalan süre hesaplama (Sezon/Film bazlı)
+                const remainingMins = itemTotalMins - itemWatchedMins;
+
+                let contentHtml = `
+                    <div class="flex items-start justify-between gap-3 mb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl ${item.type === 'movie' ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30' : 'bg-purple-600/20 text-purple-400 border border-purple-500/30'} flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    ${item.type === 'movie' ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"></path>' : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>'}
+                                </svg>
                             </div>
-                            <div class="text-right hidden sm:block">
-                                <span class="text-xs font-semibold ${stateArr[0] ? 'text-emerald-400' : 'text-gray-400'}">${stateArr[0] ? 'İzlendi' : 'İzlenmedi'}</span>
+                            <div>
+                                <span class="text-xs font-medium text-gray-500">#${item.id}</span>
+                                <h3 class="text-base font-bold text-white leading-snug">${item.title}</h3>
                             </div>
                         </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleItemFull(${item.id})" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 transition">
+                                ${isItemFullyCompleted ? 'Geri Al' : 'Tümünü İzle'}
+                            </button>
+                            ${item.type === 'series' ? `
+                                <button onclick="toggleAccordion(${item.id})" class="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center transition">
+                                    <svg id="chevron-${item.id}" class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Meta Bilgiler -->
+                    <div class="flex items-center gap-4 text-xs text-gray-400 mb-3 flex-wrap">
+                        <span class="bg-gray-800/80 px-2.5 py-1 rounded-md border border-gray-700/50">${item.type === 'movie' ? `Film • ${item.duration} dk` : `Dizi • ${item.episodes} Bölüm (~${item.durationPerEp} dk/bölüm)`}</span>
+                        <span class="text-emerald-400 font-medium">${percent}% Tammlandı</span>
+                    </div>
+
+                    <!-- İlerleme Çubuğu ve Kalan Süre -->
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs text-gray-400 mb-1">
+                            <span>Kalan Süre: <strong class="text-rose-400">${formatMinutes(remainingMins)}</strong></span>
+                            <span>Toplam: ${formatMinutes(itemTotalMins)}</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-red-600 to-emerald-500 h-full transition-all duration-300" style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+                `;
+
+                // Eğer diziyse bölüm listesi ekle
+                if (item.type === 'series') {
+                    contentHtml += `
+                        <div id="episodes-${item.id}" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 mt-3 pt-3 border-t border-gray-800/80">
                     `;
-                } else {
-                    // Series card with accordion
-                    let epsHtml = '';
-                    for (let i = 0; i < item.eps; i++) {
-                        epsHtml += `
-                            <button onclick="toggleItem(${item.id}, ${i})" class="flex items-center justify-between p-2.5 rounded-xl border ${stateArr[i] ? 'bg-emerald-950/30 border-emerald-600/40 text-emerald-300' : 'bg-darkbase-900 border-gray-800 text-gray-300 hover:border-gray-700'} transition cursor-pointer text-left">
-                                <span class="text-xs font-medium">${i + 1}. Bölüm</span>
-                                <div class="w-5 h-5 rounded border ${stateArr[i] ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-gray-600 bg-darkbase-800'} flex items-center justify-center text-xs">
-                                    ${stateArr[i] ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
+                    for (let i = 0; i < item.episodes; i++) {
+                        const isEpWatched = userProgress[item.id][i];
+                        contentHtml += `
+                            <button onclick="toggleEpisode(${item.id}, ${i})" class="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium border transition ${isEpWatched ? 'bg-emerald-950/30 border-emerald-500/40 text-emerald-300' : 'bg-gray-800/40 border-gray-700/50 text-gray-400 hover:bg-gray-800 hover:text-gray-200'}">
+                                <span>${i + 1}. Bölüm</span>
+                                <div class="w-4 h-4 rounded border ${isEpWatched ? 'bg-emerald-500 border-emerald-500 text-white flex items-center justify-center' : 'border-gray-600'} text-[10px]">
+                                    ${isEpWatched ? '✓' : ''}
                                 </div>
                             </button>
                         `;
                     }
-
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex items-center justify-between gap-4 cursor-pointer" onclick="toggleAccordion(${item.id})">
-                                <div class="flex items-center space-x-3">
-                                    <div class="bg-purple-500/10 text-purple-400 p-2.5 rounded-xl border border-purple-500/25 flex items-center justify-center">
-                                        <i class="fa-solid fa-tv text-sm"></i>
-                                    </div>
-                                    <div>
-                                        <div class="flex items-center gap-2 flex-wrap">
-                                            <span class="text-xs font-bold text-gray-500">#${item.id}</span>
-                                            <h4 class="text-base font-bold text-white">${item.title}</h4>
-                                        </div>
-                                        <div class="flex items-center gap-3 mt-1 text-xs text-gray-400">
-                                            <span><i class="fa-regular fa-calendar mr-1"></i> ${item.year}</span>
-                                            <span><i class="fa-solid fa-layer-group mr-1"></i> ${item.eps} Bölüm (~${item.epDuration} dk/bölüm)</span>
-                                            <span class="text-emerald-400 font-semibold">${watchedCount}/${item.eps} İzlendi (%${progressPct})</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <button onclick="event.stopPropagation(); toggleSeason(${item.id})" class="text-xs bg-darkbase-700 hover:bg-darkbase-600 text-gray-300 px-3 py-1.5 rounded-lg border border-gray-700 transition" title="Sezonun Tümünü İşaretle">
-                                        ${isComplete ? 'Tümünü Kaldır' : 'Tümünü İzle'}
-                                    </button>
-                                    <i id="arrow-${item.id}" class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
-                                </div>
-                            </div>
-
-                            <!-- Progress Bar for Series -->
-                            <div class="w-full bg-gray-700/40 rounded-full h-1.5 mt-3 overflow-hidden">
-                                <div class="bg-gradient-to-r from-purple-500 to-emerald-500 h-1.5 rounded-full transition-all duration-300" style="width: ${progressPct}%"></div>
-                            </div>
-
-                            <!-- Accordion Episodes Drawer -->
-                            <div id="accordion-${item.id}" class="hidden mt-4 pt-4 border-t border-gray-800 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                                ${epsHtml}
-                            </div>
-                        </div>
-                    `;
+                    contentHtml += `</div>`;
                 }
+
+                card.innerHTML = contentHtml;
                 container.appendChild(card);
             });
+
+        // Global İstatistikleri Güncelle
+            document.getElementById('statTotalItems').innerText = totalItemCount;
+            document.getElementById('statWatchedItems').innerText = completedItemCount;
+            document.getElementById('statTotalTime').innerText = formatMinutes(totalGlobalMins);
+            document.getElementById('statRemainingTime').innerText = formatMinutes(totalGlobalMins - watchedGlobalMins);
+
+            const globalPercentVal = Math.round((watchedGlobalMins / totalGlobalMins) * 100) || 0;
+            document.getElementById('globalPercent').innerText = globalPercentVal + '%';
+            document.getElementById('globalProgressBar').style.width = globalPercentVal + '%';
         }
 
-        function markAllWatched() {
-            itemsData.forEach(item => {
-                const count = item.type === 'movie' ? 1 : item.eps;
-                userState[item.id] = new Array(count).fill(true);
-            });
-            saveState();
-            showToast('Tüm yapımlar izlendi olarak işaretlendi!', 'success');
+        function toggleEpisode(itemId, epIndex) {
+            userProgress[itemId][epIndex] = !userProgress[itemId][epIndex];
+            saveProgress();
         }
 
-        function resetProgress() {
-            itemsData.forEach(item => {
-                const count = item.type === 'movie' ? 1 : item.eps;
-                userState[item.id] = new Array(count).fill(false);
+        function toggleItemFull(itemId) {
+            const item = rawData.find(i => i.id === itemId);
+            if (item.type === 'movie') {
+                userProgress[itemId] = !userProgress[itemId];
+            } else {
+                const eps = userProgress[itemId];
+                const allWatched = eps.every(Boolean);
+                userProgress[itemId] = new Array(item.episodes).fill(!allWatched);
+            }
+            saveProgress();
+        }
+
+        function toggleAll(status) {
+            rawData.forEach(item => {
+                if (item.type === 'movie') {
+                    userProgress[item.id] = status;
+                } else {
+                    userProgress[item.id] = new Array(item.episodes).fill(status);
+                }
             });
-            saveState();
-            showToast('Tüm ilerleme sıfırlandı.', 'info');
+            saveProgress();
+        }
+
+        function resetAll() {
+            if (confirm('Tüm ilerlemeniz sıfırlanacak. Emin misiniz?')) {
+                localStorage.removeItem('marvel_progress_v2');
+                userProgress = {};
+                initProgress();
+                saveProgress();
+            }
+        }
+
+        function filterItems() {
+            renderApp();
         }
 
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userState, null, 2));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userProgress));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `mcu_tracker_backup_${new Date().toISOString().slice(0,10)}.json`);
+            downloadAnchor.setAttribute("download", "marvel_tracker_backup.json");
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            showToast('Veriler başarıyla dışa aktarıldı.', 'success');
         }
 
         function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    userState = parsed;
-                    saveState();
-                    showToast('Veriler başarıyla içe aktarıldı!', 'success');
-                } catch(err) {
-                    showToast('Geçersiz dosya formatı!', 'error');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toastMessage');
-            const iconEl = document.getElementById('toastIcon');
-
-            msgEl.innerText = message;
-            if (type === 'success') {
-                iconEl.className = 'fa-solid fa-circle-check text-emerald-400 text-lg';
-            } else if (type === 'info') {
-                iconEl.className = 'fa-solid fa-circle-info text-blue-400 text-lg';
-            } else {
-                iconEl.className = 'fa-solid fa-triangle-exclamation text-marvel-500 text-lg';
+            const fileReader = new FileReader();
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0], "UTF-8");
+                fileReader.onload = (e) => {
+                    try {
+                        userProgress = JSON.parse(e.target.result);
+                        saveProgress();
+                        alert('Veriler başarıyla içe aktarıldı!');
+                    } catch (err) {
+                        alert('Geçersiz dosya formatı!');
+                    }
+                };
             }
-
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
         }
 
-        function renderApp() {
-            updateStats();
-            renderItems();
-        }
-
-        // Initialize on window load
-        window.onload = function() {
-            loadState();
-            renderApp();
-        };
+        // İlk Çalıştırma
+        renderApp();
     </script>
 </body>
 </html>
