@@ -99,7 +99,7 @@
     <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 w-full flex-grow">
 
         <!-- Stats Dashboard -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <!-- Total Duration -->
             <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
                 <div>
@@ -153,6 +153,23 @@
             </div>
         </div>
 
+        <!-- Doomsday 18 Aralık Target Banner -->
+        <div class="bg-marvel-950/40 border border-marvel-900/60 rounded-2xl p-4 mb-8 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:text-sm">
+            <div class="flex items-center gap-3">
+                <div class="bg-marvel-600/20 text-marvel-400 p-2.5 rounded-xl border border-marvel-500/30 flex items-center justify-center">
+                    <i class="fa-solid fa-bullseye text-lg"></i>
+                </div>
+                <div>
+                    <span class="text-gray-400 font-medium block">Avengers: Doomsday Hedefi (18 Aralık 2026)</span>
+                    <strong id="daysLeftText" class="text-amber-400 text-sm font-bold">-- gün kaldı</strong>
+                </div>
+            </div>
+            <div class="bg-marvel-900/50 border border-marvel-700/50 px-4 py-2 rounded-xl text-center w-full sm:w-auto">
+                <span class="text-gray-300 mr-2">Günde Gereken:</span>
+                <strong id="dailyNeededTime" class="text-emerald-400 text-sm font-bold">--</strong>
+            </div>
+        </div>
+
         <!-- Filters & Search Bar -->
         <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-4 mb-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
             <!-- Search input -->
@@ -199,7 +216,7 @@
         // Full Dataset of 125 Items provided by user
         const itemsData = [
             { id: 1, title: "Captain America: The First Avenger", year: "1942–1945", type: "movie", duration: 124 },
-                   { id: 2, title: "Marvel One-Shot: Agent Carter", year: "1944", type: "movie", duration: 15 },
+            { id: 2, title: "Marvel One-Shot: Agent Carter", year: "1944", type: "movie", duration: 15 },
             { id: 3, title: "Agent Carter (1. Sezon)", year: "1946", type: "series", eps: 8, epDuration: 42 },
             { id: 4, title: "Agent Carter (2. Sezon)", year: "1947", type: "series", eps: 10, epDuration: 42 },
             { id: 5, title: "X-Men: First Class", year: "1962", type: "movie", duration: 132 },
@@ -405,6 +422,25 @@
             document.getElementById('statPercentage').innerText = `%${percentage}`;
             document.getElementById('statWatchedEpisodes').innerText = `${watchedUnits} / ${totalUnits} Bölüm/Film`;
             document.getElementById('statProgressBar').style.width = `${percentage}%`;
+
+            // Doomsday 18 Aralık 2026 Daily Calculation
+            const targetDate = new Date('2026-12-18T00:00:00');
+            const today = new Date();
+            const timeDiff = targetDate - today;
+            const daysLeft = Math.max(1, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
+            
+            const daysLeftEl = document.getElementById('daysLeftText');
+            const dailyNeededEl = document.getElementById('dailyNeededTime');
+
+            if (daysLeftEl && dailyNeededEl) {
+                daysLeftEl.innerText = `${daysLeft} Gün Kaldı`;
+                if (remainingMins > 0) {
+                    const dailyMinsNeeded = Math.ceil(remainingMins / daysLeft);
+                    dailyNeededEl.innerText = `${formatHoursMinutes(dailyMinsNeeded)} / gün`;
+                } else {
+                    dailyNeededEl.innerText = "Yetiştin! 🎉";
+                }
+            }
         }
 
         function toggleItem(id, index = 0) {
@@ -487,6 +523,9 @@
                 const isComplete = watchedCount === totalCount;
                 const progressPct = Math.round((watchedCount / totalCount) * 100);
 
+                // TMDB Poster Görsel Yolu (Varsayılan dinamik görsel araması / fallback)
+                const posterUrl = item.poster ? `https://image.tmdb.org/t/p/w200${item.poster}` : `https://placehold.co/120x180/1f2937/d1d5db?text=${encodeURIComponent(item.title.substring(0,12))}`;
+
                 const card = document.createElement('div');
                 card.className = `bg-darkbase-800/90 border ${isComplete ? 'border-emerald-600/40 bg-emerald-950/10' : 'border-gray-800'} rounded-2xl p-4 sm:p-5 shadow-lg transition hover:border-gray-700`;
 
@@ -497,6 +536,8 @@
                                 <button onclick="toggleItem(${item.id}, 0)" class="w-7 h-7 rounded-lg border-2 ${stateArr[0] ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-gray-600 hover:border-marvel-500 bg-darkbase-900'} flex items-center justify-center transition shadow-sm cursor-pointer flex-shrink-0">
                                     ${stateArr[0] ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
                                 </button>
+                                <!-- Poster Görseli -->
+                                <img src="${posterUrl}" onerror="this.src='https://placehold.co/120x180/1f2937/9ca3af?text=MCU'" alt="${item.title}" class="w-12 h-16 sm:w-14 sm:h-20 object-cover rounded-xl shadow-md border border-gray-700/50 flex-shrink-0">
                                 <div>
                                     <div class="flex items-center gap-2 flex-wrap">
                                         <span class="text-xs font-bold text-gray-500">#${item.id}</span>
@@ -515,7 +556,7 @@
                         </div>
                     `;
                 } else {
-                    // Series card with accordion
+                    // Series card with accordion & poster
                     let epsHtml = '';
                     for (let i = 0; i < item.eps; i++) {
                         epsHtml += `
@@ -532,9 +573,8 @@
                         <div>
                             <div class="flex items-center justify-between gap-4 cursor-pointer" onclick="toggleAccordion(${item.id})">
                                 <div class="flex items-center space-x-3">
-                                    <div class="bg-purple-500/10 text-purple-400 p-2.5 rounded-xl border border-purple-500/25 flex items-center justify-center">
-                                        <i class="fa-solid fa-tv text-sm"></i>
-                                    </div>
+                                    <!-- Poster Görseli -->
+                                    <img src="${posterUrl}" onerror="this.src='https://placehold.co/120x180/1f2937/9ca3af?text=Dizi'" alt="${item.title}" class="w-12 h-16 sm:w-14 sm:h-20 object-cover rounded-xl shadow-md border border-gray-700/50 flex-shrink-0">
                                     <div>
                                         <div class="flex items-center gap-2 flex-wrap">
                                             <span class="text-xs font-bold text-gray-500">#${item.id}</span>
