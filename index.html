@@ -217,8 +217,8 @@
         const itemsData = [
             { id: 1, title: "Captain America: The First Avenger", year: "1942–1945", type: "movie", duration: 124 },
             { id: 2, title: "Marvel One-Shot: Agent Carter", year: "1944", type: "movie", duration: 15 },
-            { id: 3, title: "Agent Carter (1. Sezon)", year: "1946", type: "series", eps: 8, epDuration: 42 },
-            { id: 4, title: "Agent Carter (2. Sezon)", year: "1947", type: "series", eps: 10, epDuration: 42 },
+            { id: 3, title: "Agent Carter (1. Sezon)", year: "1946", type: "series", eps: 8, epDurations: [46, 42, 43, 43, 42, 42, 43, 43] },
+            { id: 4, title: "Agent Carter (2. Sezon)", year: "1947", type: "series", eps: 10, epDurations: [43, 42, 42, 43, 42, 42, 42, 43, 42, 43] },
             { id: 5, title: "X-Men: First Class", year: "1962", type: "movie", duration: 132 },
             { id: 6, title: "X-Men Origins: Wolverine", year: "1979", type: "movie", duration: 107 },
             { id: 7, title: "X-Men: Apocalypse", year: "1983", type: "movie", duration: 144 },
@@ -252,9 +252,9 @@
             { id: 35, title: "Marvel One-Shot: All Hail the King", year: "2013", type: "movie", duration: 14 },
             { id: 36, title: "The Wolverine", year: "2013", type: "movie", duration: 126 },
             { id: 37, title: "Thor: The Dark World", year: "2013", type: "movie", duration: 112 },
-            { id: 38, title: "Agents of S.H.I.E.L.D. (1. Sezon 1-7. Bölümler)", year: "2013", type: "series", eps: 7, epDuration: 43 },
+            { id: 38, title: "Agents of S.H.I.E.L.D. (1. Sezon 1-7. Bölümler)", year: "2013", type: "series", eps: 7, epDurations: [45, 43, 43, 43, 43, 43, 43] },
             { id: 39, title: "Captain America: The Winter Soldier", year: "2014", type: "movie", duration: 136 },
-            { id: 40, title: "Agents of S.H.I.E.L.D. (1. Sezon 8-22. Bölümler)", year: "2014", type: "series", eps: 15, epDuration: 43 },
+            { id: 40, title: "Agents of S.H.I.E.L.D. (1. Sezon 8-22. Bölümler)", year: "2014", type: "series", eps: 15, epDurations: [43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 43, 45] },
             { id: 41, title: "The Amazing Spider-Man 2", year: "2014", type: "movie", duration: 142 },
             { id: 42, title: "X-Men: Days of Future Past", year: "2014", type: "movie", duration: 131 },
             { id: 43, title: "Guardians of the Galaxy", year: "2014", type: "movie", duration: 121 },
@@ -401,13 +401,27 @@
             renderApp();
         }
 
-        function formatHoursMinutes(totalMinutes) {
-            if (totalMinutes <= 0) return "0dk";
-            const hours = Math.floor(totalMinutes / 60);
-            const minutes = totalMinutes % 60;
-            if (hours === 0) return `${minutes}dk`;
-            if (minutes === 0) return `${hours}s`;
-            return `${hours}s ${minutes}dk`;
+        function formatHoursMinutes(totalMins) {
+            const hrs = Math.floor(totalMins / 60);
+            const mins = totalMins % 60;
+            if (hrs === 0) return `${mins}dk`;
+            if (mins === 0) return `${hrs}s`;
+            return `${hrs}s ${mins}dk`;
+        }
+
+        function getEpDuration(item, epIndex) {
+            if (item.epDurations && item.epDurations[epIndex]) {
+                return item.epDurations[epIndex];
+            }
+            return item.epDuration || 42;
+        }
+
+        function getItemTotalMins(item) {
+            if (item.type === 'movie') return item.duration;
+            if (item.epDurations) {
+                return item.epDurations.reduce((a, b) => a + b, 0);
+            }
+            return item.eps * (item.epDuration || 42);
         }
 
         function updateStats() {
@@ -426,11 +440,11 @@
                         watchedUnits += 1;
                     }
                 } else {
-                    totalMins += item.eps * item.epDuration;
+                    totalMins += getItemTotalMins(item);
                     totalUnits += item.eps;
-                    stateArr.forEach(watched => {
+                    stateArr.forEach((watched, idx) => {
                         if (watched) {
-                            watchedMins += item.epDuration;
+                            watchedMins += getEpDuration(item, idx);
                             watchedUnits += 1;
                         }
                     });
@@ -459,9 +473,7 @@
             if (daysLeftEl && dailyNeededEl) {
                 daysLeftEl.innerText = `${daysLeft} Gün Kaldı`;
                 if (remainingMins > 0) {
-                    // Günlük ortalama hedef süresi (Örn: 300 dk / 5 saat)
                     const baseDailyTargetMins = Math.ceil(remainingMins / daysLeft);
-                    // Bugün izlenen süreyi bugünün hedefinden düşüyoruz
                     const remainingTodayMins = Math.max(0, baseDailyTargetMins - dailyState.watchedTodayMins);
 
                     if (remainingTodayMins === 0) {
@@ -479,11 +491,10 @@
             if (!userState[id]) return;
             const item = itemsData.find(i => i.id === id);
             const isNowWatched = !userState[id][index];
-            const duration = item.type === 'movie' ? item.duration : item.epDuration;
+            const duration = item.type === 'movie' ? item.duration : getEpDuration(item, index);
 
             userState[id][index] = isNowWatched;
 
-            // Bugün izlenen dakikayı güncelleme (Saat 00:00'da sıfırlanır)
             if (isNowWatched) {
                 dailyState.watchedTodayMins += duration;
             } else {
@@ -500,24 +511,20 @@
             const allWatched = arr.every(Boolean);
 
             if (!allWatched) {
-                // Hepsini izlendi yap
-                const unwatchedCount = arr.filter(w => !w).length;
-                dailyState.watchedTodayMins += unwatchedCount * item.epDuration;
+                arr.forEach((w, idx) => {
+                    if (!w) {
+                        dailyState.watchedTodayMins += getEpDuration(item, idx);
+                    }
+                });
                 userState[id] = new Array(item.eps).fill(true);
             } else {
-                // Hepsini kaldır
-                dailyState.watchedTodayMins = Math.max(0, dailyState.watchedTodayMins - (item.eps * item.epDuration));
+                arr.forEach((w, idx) => {
+                    if (w) {
+                        dailyState.watchedTodayMins = Math.max(0, dailyState.watchedTodayMins - getEpDuration(item, idx));
+                    }
+                });
                 userState[id] = new Array(item.eps).fill(false);
             }
-            saveState();
-        }
-
-        function toggleSeason(id) {
-            const item = itemsData.find(i => i.id === id);
-            if (!item || item.type !== 'series') return;
-            const arr = userState[id];
-            const allWatched = arr.every(Boolean);
-            userState[id] = new Array(item.eps).fill(!allWatched);
             saveState();
         }
 
@@ -612,11 +619,12 @@
                 } else {
                     let epsHtml = '';
                     for (let i = 0; i < item.eps; i++) {
+                        const epMins = getEpDuration(item, i);
                         epsHtml += `
                             <button onclick="toggleItem(${item.id}, ${i})" class="flex items-center justify-between p-2.5 rounded-xl border ${stateArr[i] ? 'bg-emerald-950/30 border-emerald-600/40 text-emerald-300' : 'bg-darkbase-900 border-gray-800 text-gray-300 hover:border-gray-700'} transition cursor-pointer text-left">
                                 <div class="flex flex-col">
                                     <span class="text-xs font-medium">${i + 1}. Bölüm</span>
-                                    <span class="text-[10px] text-gray-400">${item.epDuration} dk</span>
+                                    <span class="text-[10px] text-gray-400">${epMins} dk</span>
                                 </div>
                                 <div class="w-5 h-5 rounded border ${stateArr[i] ? 'bg-emerald-600 border-emerald-500 text-white' : 'border-gray-600 bg-darkbase-800'} flex items-center justify-center text-xs flex-shrink-0">
                                     ${stateArr[i] ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
@@ -625,6 +633,7 @@
                         `;
                     }
 
+                    const avgEpDur = Math.round(getItemTotalMins(item) / item.eps);
                     card.innerHTML = `
                         <div class="flex flex-col gap-3">
                             <div class="flex items-center justify-between gap-4">
@@ -636,7 +645,7 @@
                                         <div class="flex items-center gap-2">
                                             <span class="text-xs font-semibold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">Dizi</span>
                                             <span class="text-xs text-gray-400 font-medium">${item.year}</span>
-                                            <span class="text-xs text-gray-500">• Her bölüm ~${item.epDuration} dk</span>
+                                            <span class="text-xs text-gray-500">• Ortalama ~${avgEpDur} dk/bölüm</span>
                                         </div>
                                         <h3 class="text-base font-bold text-white mt-1">${item.title}</h3>
                                     </div>
