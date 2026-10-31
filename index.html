@@ -452,7 +452,8 @@
             });
 
             const remainingMins = totalMins - watchedMins;
-            const percentage = totalUnits > 0 ? ((watchedUnits / totalUnits) * 100).toFixed(1) : 0;
+            // DÜZELTME: Yüzdeyi bölüm/film sayısına göre değil, izlenen DAKİKAYA göre hesaplıyoruz
+            const percentage = totalMins > 0 ? ((watchedMins / totalMins) * 100).toFixed(1) : 0;
 
             document.getElementById('statTotalTime').innerText = formatHoursMinutes(totalMins);
             document.getElementById('statWatchedTime').innerText = formatHoursMinutes(watchedMins);
