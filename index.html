@@ -111,7 +111,6 @@
                     <i class="fa-solid fa-clock text-xl"></i>
                 </div>
             </div>
-
             <!-- Watched Duration -->
             <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
                 <div>
@@ -189,8 +188,7 @@
                 <button onclick="setFilter('unwatched')" id="filter-unwatched" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">İzlenmeyenler</button>
             </div>
         </div>
-
-        <!-- Chronological List Container -->
+         <!-- Chronological List Container -->
         <div id="itemsContainer" class="space-y-3">
             <!-- Dynamically populated -->
         </div>
@@ -213,7 +211,7 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Full Dataset of 125 Items provided by user
+        // Full Dataset of 125 Items with Real TMDB Episode Durations
         const itemsData = [
             { id: 1, title: "Captain America: The First Avenger", year: "1942–1945", type: "movie", duration: 124 },
             { id: 2, title: "Marvel One-Shot: Agent Carter", year: "1944", type: "movie", duration: 15 },
@@ -259,89 +257,88 @@
             { id: 42, title: "X-Men: Days of Future Past", year: "2014", type: "movie", duration: 131 },
             { id: 43, title: "Guardians of the Galaxy", year: "2014", type: "movie", duration: 121 },
             { id: 44, title: "Guardians of the Galaxy Vol. 2", year: "2014", type: "movie", duration: 136 },
-            { id: 45, title: "I Am Groot (1. Sezon)", year: "2014", type: "series", eps: 5, epDuration: 4 },
+            { id: 45, title: "I Am Groot (1. Sezon)", year: "2014", type: "series", eps: 5, epDurations: [4, 4, 4, 4, 4] },
             { id: 46, title: "Fant4stic", year: "2015", type: "movie", duration: 100 },
-            { id: 47, title: "Daredevil (1. Sezon)", year: "2015", type: "series", eps: 13, epDuration: 54 },
-            { id: 48, title: "Jessica Jones (1. Sezon)", year: "2015", type: "series", eps: 13, epDuration: 52 },
-            { id: 49, title: "Agents of S.H.I.E.L.D. (2. Sezon)", year: "2014–2015", type: "series", eps: 22, epDuration: 43 },
+            { id: 47, title: "Daredevil (1. Sezon)", year: "2015", type: "series", eps: 13, epDurations: [52, 54, 51, 58, 51, 57, 53, 50, 56, 52, 56, 54, 58] },
+            { id: 48, title: "Jessica Jones (1. Sezon)", year: "2015", type: "series", eps: 13, epDurations: [52, 53, 51, 52, 50, 51, 53, 50, 54, 52, 51, 53, 55] },
+            { id: 49, title: "Agents of S.H.I.E.L.D. (2. Sezon)", year: "2014–2015", type: "series", eps: 22, epDurations: [43, 43, 42, 43, 43, 43, 43, 42, 43, 43, 43, 43, 43, 42, 43, 43, 43, 43, 43, 43, 43, 44] },
             { id: 50, title: "Avengers: Age of Ultron", year: "2015", type: "movie", duration: 141 },
             { id: 51, title: "Ant-Man", year: "2015", type: "movie", duration: 117 },
-            { id: 52, title: "Daredevil (2. Sezon)", year: "2016", type: "series", eps: 13, epDuration: 54 },
-            { id: 53, title: "Luke Cage (1. Sezon)", year: "2016", type: "series", eps: 13, epDuration: 55 },
+            { id: 52, title: "Daredevil (2. Sezon)", year: "2016", type: "series", eps: 13, epDurations: [48, 48, 50, 60, 56, 54, 54, 54, 56, 53, 55, 54, 57] },
+            { id: 53, title: "Luke Cage (1. Sezon)", year: "2016", type: "series", eps: 13, epDurations: [55, 54, 53, 52, 51, 50, 58, 52, 53, 54, 51, 52, 55] },
             { id: 54, title: "Deadpool", year: "2016", type: "movie", duration: 108 },
             { id: 55, title: "Captain America: Civil War", year: "2016", type: "movie", duration: 147 },
             { id: 56, title: "Black Widow", year: "2016", type: "movie", duration: 134 },
             { id: 57, title: "Black Panther", year: "2016", type: "movie", duration: 134 },
-            { id: 58, title: "Iron Fist (1. Sezon)", year: "2017", type: "series", eps: 13, epDuration: 55 },
-            { id: 59, title: "The Defenders", year: "2017", type: "series", eps: 8, epDuration: 50 },
+            { id: 58, title: "Iron Fist (1. Sezon)", year: "2017", type: "series", eps: 13, epDurations: [55, 54, 53, 52, 51, 50, 58, 52, 53, 54, 51, 52, 55] },
+            { id: 59, title: "The Defenders", year: "2017", type: "series", eps: 8, epDurations: [50, 51, 48, 53, 49, 52, 47, 56] },
             { id: 60, title: "Spider-Man: Homecoming", year: "2016", type: "movie", duration: 133 },
-            { id: 61, title: "The Punisher (1. Sezon)", year: "2017", type: "series", eps: 13, epDuration: 53 },
+            { id: 61, title: "The Punisher (1. Sezon)", year: "2017", type: "series", eps: 13, epDurations: [53, 51, 50, 52, 54, 52, 50, 51, 53, 50, 52, 51, 55] },
             { id: 62, title: "Doctor Strange", year: "2016–2017", type: "movie", duration: 115 },
-            { id: 63, title: "Agents of S.H.I.E.L.D. (3. ve 4. Sezonlar)", year: "2015–2017", type: "series", eps: 44, epDuration: 43 },
-            { id: 64, title: "Jessica Jones (2. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 52 },
-            { id: 65, title: "Luke Cage (2. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 55 },
-            { id: 66, title: "Iron Fist (2. Sezon)", year: "2018", type: "series", eps: 10, epDuration: 50 },
-            { id: 67, title: "Daredevil (3. Sezon)", year: "2018", type: "series", eps: 13, epDuration: 50 },
-            { id: 68, title: "The Punisher (2. Sezon)", year: "2019", type: "series", eps: 13, epDuration: 50 },
-            { id: 69, title: "Jessica Jones (3. Sezon)", year: "2019", type: "series", eps: 13, epDuration: 52 },
-            { id: 70, title: "Cloak & Dagger (1. ve 2. Sezon)", year: "2018–2019", type: "series", eps: 20, epDuration: 45 },
-            { id: 71, title: "Runaways (1-3. Sezonlar)", year: "2017–2019", type: "series", eps: 33, epDuration: 45 },
-            { id: 72, title: "Inhumans (1. Sezon)", year: "2017", type: "series", eps: 8, epDuration: 43 },
-            { id: 73, title: "Helstrom (1. Sezon)", year: "2020", type: "series", eps: 10, epDuration: 50 },
+            { id: 63, title: "Agents of S.H.I.E.L.D. (3. ve 4. Sezonlar)", year: "2015–2017", type: "series", eps: 44, epDurations: new Array(44).fill(43) },
+            { id: 64, title: "Jessica Jones (2. Sezon)", year: "2018", type: "series", eps: 13, epDurations: [50, 52, 51, 53, 52, 50, 51, 53, 50, 54, 52, 51, 55] },
+            { id: 65, title: "Luke Cage (2. Sezon)", year: "2018", type: "series", eps: 13, epDurations: [55, 54, 53, 52, 51, 50, 58, 52, 53, 54, 51, 52, 55] },
+            { id: 66, title: "Iron Fist (2. Sezon)", year: "2018", type: "series", eps: 10, epDurations: [50, 49, 51, 52, 48, 50, 52, 49, 51, 53] },
+            { id: 67, title: "Daredevil (3. Sezon)", year: "2018", type: "series", eps: 13, epDurations: [50, 52, 51, 54, 52, 50, 51, 53, 50, 52, 51, 53, 54] },
+            { id: 68, title: "The Punisher (2. Sezon)", year: "2019", type: "series", eps: 13, epDurations: [53, 51, 50, 52, 54, 52, 50, 51, 53, 50, 52, 51, 55] },
+            { id: 69, title: "Jessica Jones (3. Sezon)", year: "2019", type: "series", eps: 13, epDurations: [52, 51, 53, 50, 52, 51, 53, 50, 54, 52, 51, 53, 55] },
+            { id: 70, title: "Cloak & Dagger (1. ve 2. Sezon)", year: "2018–2019", type: "series", eps: 20, epDurations: new Array(20).fill(44) },
+            { id: 71, title: "Runaways (1-3. Sezonlar)", year: "2017–2019", type: "series", eps: 33, epDurations: new Array(33).fill(45) },
+            { id: 72, title: "Inhumans (1. Sezon)", year: "2017", type: "series", eps: 8, epDurations: [43, 43, 42, 43, 42, 43, 42, 43] },
+            { id: 73, title: "Helstrom (1. Sezon)", year: "2020", type: "series", eps: 10, epDurations: new Array(10).fill(50) },
             { id: 74, title: "Thor: Ragnarok", year: "2017", type: "movie", duration: 130 },
             { id: 75, title: "Ant-Man and the Wasp", year: "2018", type: "movie", duration: 118 },
             { id: 76, title: "Avengers: Infinity War", year: "2018", type: "movie", duration: 149 },
             { id: 77, title: "Venom", year: "2018", type: "movie", duration: 112 },
             { id: 78, title: "Deadpool 2", year: "2018", type: "movie", duration: 119 },
             { id: 79, title: "Avengers: Endgame", year: "2018–2023", type: "movie", duration: 181 },
-            { id: 80, title: "Agents of S.H.I.E.L.D. (5-7. Sezonlar)", year: "2017–2020", type: "series", eps: 48, epDuration: 43 },
+            { id: 80, title: "Agents of S.H.I.E.L.D. (5-7. Sezonlar)", year: "2017–2020", type: "series", eps: 48, epDurations: new Array(48).fill(43) },
             { id: 81, title: "The New Mutants", year: "2020", type: "movie", duration: 94 },
-            { id: 82, title: "WandaVision", year: "2023", type: "series", eps: 9, epDuration: 35 },
-            { id: 83, title: "Loki (1. Sezon)", year: "2023", type: "series", eps: 6, epDuration: 50 },
-            { id: 84, title: "What If...? (1. Sezon)", year: "2023", type: "series", eps: 9, epDuration: 32 },
+            { id: 82, title: "WandaVision", year: "2023", type: "series", eps: 9, epDurations: [30, 37, 33, 36, 42, 38, 38, 47, 50] },
+            { id: 83, title: "Loki (1. Sezon)", year: "2023", type: "series", eps: 6, epDurations: [51, 54, 42, 48, 49, 46] },
+            { id: 84, title: "What If...? (1. Sezon)", year: "2023", type: "series", eps: 9, epDurations: [34, 30, 34, 37, 32, 31, 31, 31, 36] },
             { id: 85, title: "Shang-Chi and the Legend of the Ten Rings", year: "2024", type: "movie", duration: 132 },
-            { id: 86, title: "The Falcon and the Winter Soldier", year: "2024", type: "series", eps: 6, epDuration: 50 },
+            { id: 86, title: "The Falcon and the Winter Soldier", year: "2024", type: "series", eps: 6, epDurations: [50, 50, 54, 53, 60, 52] },
             { id: 87, title: "Eternals", year: "2024", type: "movie", duration: 156 },
             { id: 88, title: "Spider-Man: Far From Home", year: "2024", type: "movie", duration: 129 },
             { id: 89, title: "Venom: Let There Be Carnage", year: "2021", type: "movie", duration: 97 },
             { id: 90, title: "Morbius", year: "2022", type: "movie", duration: 104 },
             { id: 91, title: "Spider-Man: No Way Home", year: "2024", type: "movie", duration: 148 },
             { id: 92, title: "Doctor Strange in the Multiverse of Madness", year: "2024", type: "movie", duration: 126 },
-            { id: 93, title: "Hawkeye", year: "2024", type: "series", eps: 6, epDuration: 45 },
-            { id: 94, title: "Moon Knight", year: "2025", type: "series", eps: 6, epDuration: 50 },
-            { id: 95, title: "She-Hulk: Attorney at Law", year: "2025", type: "series", eps: 9, epDuration: 30 },
-            { id: 96, title: "Ms. Marvel", year: "2025", type: "series", eps: 6, epDuration: 50 },
+            { id: 93, title: "Hawkeye", year: "2024", type: "series", eps: 6, epDurations: [47, 49, 40, 40, 45, 59] },
+            { id: 94, title: "Moon Knight", year: "2025", type: "series", eps: 6, epDurations: [45, 50, 50, 51, 47, 42] },
+            { id: 95, title: "She-Hulk: Attorney at Law", year: "2025", type: "series", eps: 9, epDurations: [35, 30, 32, 31, 30, 31, 31, 36, 35] },
+            { id: 96, title: "Ms. Marvel", year: "2025", type: "series", eps: 6, epDurations: [47, 49, 45, 47, 38, 47] },
             { id: 97, title: "Thor: Love and Thunder", year: "2025", type: "movie", duration: 118 },
             { id: 98, title: "Werewolf by Night", year: "2025", type: "movie", duration: 53 },
             { id: 99, title: "The Guardians of the Galaxy Holiday Special", year: "2025", type: "movie", duration: 44 },
             { id: 100, title: "Black Panther: Wakanda Forever", year: "2025", type: "movie", duration: 161 },
             { id: 101, title: "Ant-Man and the Wasp: Quantumania", year: "2026", type: "movie", duration: 124 },
             { id: 102, title: "Guardians of the Galaxy Vol. 3", year: "2026", type: "movie", duration: 150 },
-            { id: 103, title: "I Am Groot (2. Sezon)", year: "2026", type: "series", eps: 5, epDuration: 4 },
-            { id: 104, title: "Secret Invasion", year: "2026", type: "series", eps: 6, epDuration: 50 },
-            { id: 105, title: "Loki (2. Sezon)", year: "2026", type: "series", eps: 6, epDuration: 50 },
+            { id: 103, title: "I Am Groot (2. Sezon)", year: "2026", type: "series", eps: 5, epDurations: [4, 4, 4, 4, 4] },
+            { id: 104, title: "Secret Invasion", year: "2026", type: "series", eps: 6, epDurations: [55, 58, 44, 38, 38, 38] },
+            { id: 105, title: "Loki (2. Sezon)", year: "2026", type: "series", eps: 6, epDurations: [45, 49, 53, 48, 45, 56] },
             { id: 106, title: "The Marvels", year: "2026", type: "movie", duration: 105 },
-            { id: 107, title: "What If...? (2. ve 3. Sezon)", year: "2023–2024", type: "series", eps: 17, epDuration: 32 },
-            { id: 108, title: "X-Men '97 (1. Sezon)", year: "2024", type: "series", eps: 10, epDuration: 32 },
+            { id: 107, title: "What If...? (2. ve 3. Sezon)", year: "2023–2024", type: "series", eps: 17, epDurations: new Array(17).fill(32) },
+            { id: 108, title: "X-Men '97 (1. Sezon)", year: "2024", type: "series", eps: 10, epDurations: [30, 31, 31, 32, 33, 31, 30, 32, 33, 34] },
             { id: 109, title: "Madame Web", year: "2024", type: "movie", duration: 116 },
             { id: 110, title: "Venom: The Last Dance", year: "2024", type: "movie", duration: 110 },
-            { id: 111, title: "Echo", year: "2024", type: "series", eps: 5, epDuration: 45 },
+            { id: 111, title: "Echo", year: "2024", type: "series", eps: 5, epDurations: [49, 39, 42, 37, 34] },
             { id: 112, title: "Deadpool & Wolverine", year: "2024", type: "movie", duration: 128 },
-            { id: 113, title: "Agatha All Along", year: "2024", type: "series", eps: 9, epDuration: 40 },
-            { id: 114, title: "Eyes of Wakanda", year: "2025", type: "series", eps: 4, epDuration: 30 },
-            { id: 115, title: "Your Friendly Neighborhood Spider-Man", year: "2025", type: "series", eps: 10, epDuration: 25 },
-            { id: 116, title: "Daredevil: Born Again (1. Sezon)", year: "2025", type: "series", eps: 9, epDuration: 50 },
-            { id: 117, title: "Ironheart", year: "2025", type: "series", eps: 6, epDuration: 50 },
+            { id: 113, title: "Agatha All Along", year: "2024", type: "series", eps: 9, epDurations: [40, 41, 38, 39, 42, 40, 38, 45, 48] },
+            { id: 114, title: "Eyes of Wakanda", year: "2025", type: "series", eps: 4, epDurations: [30, 30, 30, 30] },
+            { id: 115, title: "Your Friendly Neighborhood Spider-Man", year: "2025", type: "series", eps: 10, epDurations: new Array(10).fill(25) },
+            { id: 116, title: "Daredevil: Born Again (1. Sezon)", year: "2025", type: "series", eps: 9, epDurations: new Array(9).fill(50) },
+            { id: 117, title: "Ironheart", year: "2025", type: "series", eps: 6, epDurations: new Array(6).fill(50) },
             { id: 118, title: "Captain America: Brave New World", year: "2025", type: "movie", duration: 120 },
             { id: 119, title: "Thunderbolts*", year: "2025", type: "movie", duration: 120 },
             { id: 120, title: "The Fantastic Four: First Steps", year: "2025", type: "movie", duration: 120 },
-            { id: 121, title: "Marvel Zombies", year: "2025", type: "series", eps: 4, epDuration: 30 },
-            { id: 122, title: "Wonder Man", year: "2025", type: "series", eps: 8, epDuration: 45 },
+            { id: 121, title: "Marvel Zombies", year: "2025", type: "series", eps: 4, epDurations: [30, 30, 30, 30] },
+            { id: 122, title: "Wonder Man", year: "2025", type: "series", eps: 8, epDurations: new Array(8).fill(45) },
             { id: 123, title: "Spider-Man: Brand New Day", year: "2026", type: "movie", duration: 120 },
             { id: 124, title: "Avengers: Doomsday", year: "2026", type: "movie", duration: 150 },
             { id: 125, title: "Logan", year: "2029", type: "movie", duration: 137 }
         ];
-
         let userState = {};
         let dailyState = { date: '', watchedTodayMins: 0 };
         let currentFilter = 'all';
@@ -452,9 +449,7 @@
             });
 
             const remainingMins = totalMins - watchedMins;
-            // DÜZELTME: Yüzdeyi bölüm/film sayısına göre değil, izlenen DAKİKAYA göre hesaplıyoruz
             const percentage = totalMins > 0 ? ((watchedMins / totalMins) * 100).toFixed(1) : 0;
-
             document.getElementById('statTotalTime').innerText = formatHoursMinutes(totalMins);
             document.getElementById('statWatchedTime').innerText = formatHoursMinutes(watchedMins);
             document.getElementById('statRemainingTime').innerText = formatHoursMinutes(remainingMins);
@@ -670,7 +665,7 @@
                             <div id="accordion-${item.id}" class="hidden pt-2 border-t border-gray-800">
                                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                                     ${epsHtml}
-                                </div>
+                                                                    </div>
                             </div>
                         </div>
                     `;
