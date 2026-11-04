@@ -94,8 +94,7 @@
             </div>
         </div>
     </header>
-
-    <!-- Main Content -->
+     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 w-full flex-grow">
 
         <!-- Stats Dashboard -->
@@ -111,6 +110,7 @@
                     <i class="fa-solid fa-clock text-xl"></i>
                 </div>
             </div>
+
             <!-- Watched Duration -->
             <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-5 shadow-xl backdrop-blur flex items-center justify-between">
                 <div>
@@ -169,6 +169,17 @@
             </div>
         </div>
 
+        <!-- Fazla İzleme & Erken Bitiş Bildirim Kutusu -->
+        <div id="bonusProgressBanner" class="hidden bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 mb-8 shadow-xl flex items-center gap-3.5 text-xs sm:text-sm">
+            <div class="bg-emerald-500/20 text-emerald-400 p-2.5 rounded-xl border border-emerald-500/30 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-rocket text-lg"></i>
+            </div>
+            <div>
+                <span id="bonusTimeText" class="text-emerald-300 font-bold block text-sm">--</span>
+                <span id="earlyFinishText" class="text-gray-300 block mt-0.5">--</span>
+            </div>
+        </div>
+
         <!-- Filters & Search Bar -->
         <div class="bg-darkbase-800/80 border border-gray-800 rounded-2xl p-4 mb-6 shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
             <!-- Search input -->
@@ -178,7 +189,6 @@
                 </span>
                 <input type="text" id="searchInput" oninput="filterItems()" placeholder="Film veya dizi ara..." class="w-full bg-darkbase-900 border border-gray-700 text-gray-200 text-sm rounded-xl pl-10 pr-4 py-2.5 focus:outline-none focus:border-marvel-500 transition">
             </div>
-
             <!-- Category / Status Filters -->
             <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
                 <button onclick="setFilter('all')" id="filter-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-marvel-600 text-white shadow-md transition cursor-pointer">Tümü</button>
@@ -188,7 +198,8 @@
                 <button onclick="setFilter('unwatched')" id="filter-unwatched" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-darkbase-900 text-gray-300 border border-gray-700 hover:bg-darkbase-700 transition cursor-pointer">İzlenmeyenler</button>
             </div>
         </div>
-         <!-- Chronological List Container -->
+
+        <!-- Chronological List Container -->
         <div id="itemsContainer" class="space-y-3">
             <!-- Dynamically populated -->
         </div>
@@ -327,7 +338,7 @@
             { id: 112, title: "Deadpool & Wolverine", year: "2024", type: "movie", duration: 128 },
             { id: 113, title: "Agatha All Along", year: "2024", type: "series", eps: 9, epDurations: [40, 41, 38, 39, 42, 40, 38, 45, 48] },
             { id: 114, title: "Eyes of Wakanda", year: "2025", type: "series", eps: 4, epDurations: [30, 30, 30, 30] },
-            { id: 115, title: "Your Friendly Neighborhood Spider-Man", year: "2025", type: "series", eps: 10, epDurations: new Array(10).fill(25) },
+               { id: 115, title: "Your Friendly Neighborhood Spider-Man", year: "2025", type: "series", eps: 10, epDurations: new Array(10).fill(25) },
             { id: 116, title: "Daredevil: Born Again (1. Sezon)", year: "2025", type: "series", eps: 9, epDurations: new Array(9).fill(50) },
             { id: 117, title: "Ironheart", year: "2025", type: "series", eps: 6, epDurations: new Array(6).fill(50) },
             { id: 118, title: "Captain America: Brave New World", year: "2025", type: "movie", duration: 120 },
@@ -339,9 +350,19 @@
             { id: 124, title: "Avengers: Doomsday", year: "2026", type: "movie", duration: 150 },
             { id: 125, title: "Logan", year: "2029", type: "movie", duration: 137 }
         ];
+
         let userState = {};
         let dailyState = { date: '', watchedTodayMins: 0 };
         let currentFilter = 'all';
+
+        // Get local timezone formatted YYYY-MM-DD string instead of UTC
+        function getFormattedTodayDate() {
+            const d = new Date();
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
 
         // Load or initialize state from localStorage
         function loadState() {
@@ -354,9 +375,9 @@
                 }
             }
 
-            // Bugünün izleme süresini ve tarihini kontrol et (Saat 00:00'da resetleme)
+            // Bugünün izleme süresini ve tarihini kontrol et (Cihazın saatine göre yerel 00:00 resetleme)
             const savedDaily = localStorage.getItem('mcu_tracker_daily_v1');
-            const todayStr = new Date().toISOString().slice(0, 10);
+            const todayStr = getFormattedTodayDate();
             
             if (savedDaily) {
                 try {
@@ -364,7 +385,7 @@
                     if (parsedDaily.date === todayStr) {
                         dailyState = parsedDaily;
                     } else {
-                        // Yeni gün başladı! 00:00 resetleme
+                        // Tam yerel saatle 00:00'da yeni gün başladı!
                         dailyState = { date: todayStr, watchedTodayMins: 0 };
                     }
                 } catch(e) {
@@ -450,6 +471,7 @@
 
             const remainingMins = totalMins - watchedMins;
             const percentage = totalMins > 0 ? ((watchedMins / totalMins) * 100).toFixed(1) : 0;
+
             document.getElementById('statTotalTime').innerText = formatHoursMinutes(totalMins);
             document.getElementById('statWatchedTime').innerText = formatHoursMinutes(watchedMins);
             document.getElementById('statRemainingTime').innerText = formatHoursMinutes(remainingMins);
@@ -465,20 +487,55 @@
             
             const daysLeftEl = document.getElementById('daysLeftText');
             const dailyNeededEl = document.getElementById('dailyNeededTime');
+            const bonusBanner = document.getElementById('bonusProgressBanner');
+            const bonusTimeEl = document.getElementById('bonusTimeText');
+            const earlyFinishEl = document.getElementById('earlyFinishText');
 
             if (daysLeftEl && dailyNeededEl) {
                 daysLeftEl.innerText = `${daysLeft} Gün Kaldı`;
                 if (remainingMins > 0) {
                     const baseDailyTargetMins = Math.ceil(remainingMins / daysLeft);
-                    const remainingTodayMins = Math.max(0, baseDailyTargetMins - dailyState.watchedTodayMins);
+                    const remainingTodayMins = baseDailyTargetMins - dailyState.watchedTodayMins;
 
-                    if (remainingTodayMins === 0) {
+                    if (remainingTodayMins <= 0) {
                         dailyNeededEl.innerText = "Bugünün Hedefi Tamamlandı! 🎉";
+                        
+                        // Fazla izleme süresini ve tahmini erken bitiş tarihini hesapla
+                        const extraMins = Math.abs(remainingTodayMins);
+                        if (bonusBanner && bonusTimeEl && earlyFinishEl) {
+                            bonusBanner.classList.remove('hidden');
+                            
+                            if (extraMins > 0) {
+                                bonusTimeEl.innerText = `Harika Tempo! Bugün hedefini +${formatHoursMinutes(extraMins)} aştın! 🚀`;
+                            } else {
+                                bonusTimeEl.innerText = `Tebrikler! Bugünün hedefini tam olarak tamamladın! 🎉`;
+                            }
+
+                            // Mevcut tempoyla tahmini kaç günde biteceğini hesaplama
+                            // Eğer her gün bugünkü kadar (watchedTodayMins) izlenirse:
+                            if (dailyState.watchedTodayMins > 0) {
+                                const estDaysNeeded = Math.ceil(remainingMins / dailyState.watchedTodayMins);
+                                const daysSaved = daysLeft - estDaysNeeded;
+
+                                const estFinishDate = new Date();
+                                estFinishDate.setDate(today.getDate() + estDaysNeeded);
+                                const finishFormatted = estFinishDate.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' });
+                                       if (daysSaved > 0) {
+                                    earlyFinishEl.innerText = `Bu tempoyla devam edersen maratonun 18 Aralık yerine ${daysSaved} gün önceden (${finishFormatted}) bitecek!`;
+                                } else {
+                                    earlyFinishEl.innerText = `Bu tempon seni tam 18 Aralık hedefine ulaştırıyor.`;
+                                }
+                            } else {
+                                earlyFinishEl.innerText = `Doomsday hedefine emin adımlarla ilerliyorsun!`;
+                            }
+                        }
                     } else {
                         dailyNeededEl.innerText = `${formatHoursMinutes(remainingTodayMins)} kaldı (Hedef: ${formatHoursMinutes(baseDailyTargetMins)})`;
+                        if (bonusBanner) bonusBanner.classList.add('hidden');
                     }
                 } else {
                     dailyNeededEl.innerText = "Yetiştin! 🎉";
+                    if (bonusBanner) bonusBanner.classList.add('hidden');
                 }
             }
         }
@@ -598,7 +655,7 @@
                                 <button onclick="toggleItem(${item.id}, 0)" class="w-10 h-10 rounded-xl border ${stateArr[0] ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-darkbase-900 border-gray-700 text-gray-400 hover:border-marvel-500'} flex items-center justify-center text-base transition cursor-pointer flex-shrink-0">
                                     ${stateArr[0] ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid fa-play text-xs"></i>'}
                                 </button>
-                                <div>
+                                     <div>
                                     <div class="flex items-center gap-2">
                                         <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">Film</span>
                                         <span class="text-xs text-gray-400 font-medium">${item.year}</span>
@@ -665,7 +722,7 @@
                             <div id="accordion-${item.id}" class="hidden pt-2 border-t border-gray-800">
                                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                                     ${epsHtml}
-                                                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -696,7 +753,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(userState, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `mcu_tracker_backup_${new Date().toISOString().slice(0,10)}.json`);
+            downloadAnchor.setAttribute("download", `mcu_tracker_backup_${getFormattedTodayDate()}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
